@@ -1,0 +1,21 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Variables de entorno y secretos (nunca subirlos)
+.env
+.env.*
+!.env.example
+
+# Configuración local de Claude
+.claude/settings.local.json
+
+# Dependencias y builds (se completan al elegir la tecnología)
+node_modules/
+dist/
+build/
