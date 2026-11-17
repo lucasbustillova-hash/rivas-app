@@ -4,10 +4,40 @@ Este archivo lo lee Claude al empezar cada sesión. Lo comparten Lucas y Mario: 
 
 ## El proyecto
 
-- **Qué es:** app de gestión de proyectos para el área de construcción.
-- **Plataformas:** app web que también se usa en iPhone (idea inicial: PWA instalable desde Safari).
-- **Equipo:** Lucas y Mario (Mario está en Orlando, Florida). Trabajan de forma asíncrona, en horarios distintos.
+- **Qué es:** app interna de proyectos para **NAHOMY Pro Construction** (remodelaciones: cocinas, baños, pisos, paredes exteriores, etc.).
+- **Quién la usa:** Mario Rivas y José Esquivel, que administran el negocio. No hay empleados fijos: se subcontrata gente por día o por contrato según el trabajo.
+- **Qué resuelve:** saber en todo momento cuánto se le debe a cada subcontratista, cuánto pagó cada cliente, y tener lista la información para las 1099 a fin de año.
+- **Plataformas:** app web que también se usa en iPhone (idea inicial: PWA instalable desde Safari). Se usa en obra para subir fotos y marcar días.
+- **Equipo de desarrollo:** Lucas y Mario (Mario está en Orlando, Florida). Trabajan de forma asíncrona, en horarios distintos.
 - **Tecnología:** _todavía no definida._ Cuando se decida, anotarla en la sección "Tecnología" de abajo.
+- **Documento de alcances:** "App de Proyectos – NAHOMY Pro Construction" (Mario, 17/11/2026). Bocetos: https://claude.ai/artifact/PjC9tK46LSV5MCNEXJoSeS
+
+## Alcance
+
+### Versión 1
+
+1. **Proyectos:** datos del cliente (nombre, teléfono, correo, dirección, notas), tipo de trabajo, alcance, fechas y estado (*Estimado, Activo, En pausa, Terminado*). Fotos y videos con fecha y nota opcional, en línea de tiempo y separados en *antes / durante / después*.
+2. **Subcontratistas:** base central con nombre y nombre legal, contacto, dirección, oficio, SSN o EIN, tipo (persona o LLC), W-9 firmado, tarifa diaria y notas. Cada sub muestra su historial del año.
+3. **Pagos a subs:** por día (días × tarifa) o por contrato (monto fijo con adelantos y pago final). La app muestra cuánto se pagó y cuánto se debe.
+4. **Pagos del cliente:** monto del contrato, plan de pagos (50/50, 40/30/30 o propio) y cada pago recibido, con barra de progreso.
+
+### Después (no en la versión 1)
+
+- Reporte anual y exportación para las 1099.
+- Gastos de materiales y ganancia real por proyecto.
+- Quotes e invoices (hoy se hacen en **Zoho Invoice**; más adelante, evaluar conectarse a su API en vez de rehacerlos).
+- Calendario de quién va a qué obra.
+
+## Seguridad y datos sensibles
+
+La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
+
+- **El repositorio es público.** Nunca subir datos reales (clientes, subs, SSN, EIN, W-9, montos reales), claves de API ni archivos `.env`. Para pruebas usar solo datos inventados.
+- **Nunca** poner SSN, EIN, W-9 ni datos reales de clientes en Slack, issues ni pull requests.
+- Login obligatorio, idealmente con verificación en dos pasos.
+- SSN y EIN **encriptados** en la base de datos y **ocultos** en pantalla (•••-••-1234) hasta tocar "Mostrar".
+- Solo administradores ven la información de impuestos y la financiera.
+- Respaldos automáticos de la base de datos y de las fotos.
 
 ## Tecnología
 
@@ -59,3 +89,18 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 
 - 2026-11-17 — Trabajo con ramas + pull requests; `main` protegida.
 - 2026-11-17 — Comunicación en Slack (Rivas-app) y avisos de GitHub en `#github`.
+- 2026-11-17 — Quotes e invoices quedan fuera de la versión 1: se siguen haciendo en Zoho Invoice.
+- 2026-11-17 — No se cobra sales tax.
+- 2026-11-17 — Formas de pago del cliente: efectivo, Zelle y cheque. Tarjeta solo si el cliente lo pide, con Melio.
+- 2026-11-17 — El repositorio queda público: ningún dato real ni secreto entra al repo (ver "Seguridad y datos sensibles").
+
+## Pendiente de confirmar con Mario
+
+Propuestas hechas en `#ideas`, todavía sin respuesta:
+
+- App de celular y web con una sola app (PWA).
+- Tarifa del sub: una por defecto en su ficha, que se puede cambiar en cada proyecto.
+- Medios días: sí.
+- Contador: más adelante, con acceso de solo lectura.
+- QuickBooks: después; primero exportar a Excel para el contador.
+- ¿Se trabaja sin internet en obra? ¿Hacen falta notificaciones?
