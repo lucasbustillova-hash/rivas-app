@@ -2,7 +2,7 @@
 
 App interna de NAHOMY Pro Construction para manejar proyectos, subcontratistas y pagos. Funciona en la web y se instala en el iPhone.
 
-Tecnología: Next.js + Supabase + Vercel (detalles en [`CLAUDE.md`](CLAUDE.md)).
+Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md)).
 
 ## Equipo
 
