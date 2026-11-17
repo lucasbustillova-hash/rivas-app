@@ -15,7 +15,17 @@ Thumbs.db
 # Configuración local de Claude
 .claude/settings.local.json
 
-# Dependencias y builds (se completan al elegir la tecnología)
+# Dependencias y builds
 node_modules/
 dist/
 build/
+/.next/
+/out/
+/coverage
+next-env.d.ts
+*.tsbuildinfo
+*.pem
+npm-debug.log*
+
+# Vercel
+.vercel
