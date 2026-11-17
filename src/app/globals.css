@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Colores de la app (los mismos de los bocetos) */
+@theme inline {
+  --color-tinta: #1c1917;
+  --color-tinta-suave: #292524;
+  --color-piedra: #f5f5f4;
+  --color-borde: #d6d3d1;
+  --color-texto-suave: #57534e;
+  --color-obra: #c2410c;
+  --color-obra-oscuro: #9a3412;
+  --color-obra-claro: #fdba74;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-titulo: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-piedra);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+}
+
+/* Respeta la zona de la cámara y la barra del iPhone cuando se usa instalada */
+.safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
