@@ -50,7 +50,7 @@ La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
 
 - **App:** Next.js (React + TypeScript) con Tailwind CSS. Interfaz en español, pensada primero para la pantalla del iPhone.
 - **Base de datos, login y archivos:** Supabase (organización de Mario). Login con verificación en dos pasos y permisos por fila en la base de datos.
-- **Hosting:** Vercel.
+- **Hosting:** Netlify (cuenta de Mario). Vercel se descartó porque su plan gratis no permite uso comercial.
 - **iPhone:** PWA, instalable desde Safari con "Agregar a pantalla de inicio".
 - Las claves de Supabase van en `.env.local`, que nunca se sube. `.env.example` lista qué variables hacen falta, sin valores.
 
@@ -117,7 +117,8 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-17 — No se cobra sales tax.
 - 2026-11-17 — Formas de pago del cliente: efectivo, Zelle y cheque. Tarjeta solo si el cliente lo pide, con Melio.
 - 2026-11-17 — El repositorio queda público: ningún dato real ni secreto entra al repo (ver "Seguridad y datos sensibles").
-- 2026-11-17 — Tecnología: Next.js + Supabase + Vercel, como PWA (una sola app para celular y web).
+- 2026-11-17 — Tecnología: Next.js + Supabase, como PWA (una sola app para celular y web).
+- 2026-11-17 — Hosting en Netlify (plan gratis, permite uso comercial). El proyecto de Supabase queda por ahora en Oregon (us-west-2).
 - 2026-11-17 — Tarifa del sub: una por defecto en su ficha, editable en cada proyecto. Se permiten medios días.
 - 2026-11-17 — Sin modo offline y sin notificaciones.
 - 2026-11-17 — Contador (solo lectura) y QuickBooks quedan para después; primero exportar a Excel.
