@@ -45,6 +45,14 @@ _Pendiente. Completar cuando se elija: framework, base de datos, hosting, cómo 
 
 ## Cómo trabajamos
 
+### Antes de empezar una tarea: no duplicar trabajo
+
+Ninguno de los dos revisa código; lo importante es saber qué hizo y qué está haciendo el otro.
+
+1. Revisar los **issues** abiertos del repositorio y los últimos mensajes de `#bitacora` en Slack.
+2. Si la tarea ya está asignada a la otra persona o aparece en la bitácora como "en curso", **avisar y no empezarla**.
+3. Si no hay issue para la tarea, crearlo. Asignárselo a quien la va a hacer antes de empezar.
+
 ### Ramas y pull requests
 
 - **Nunca hacer commits directamente en `main`.** `main` está protegida.
@@ -52,7 +60,9 @@ _Pendiente. Completar cuando se elija: framework, base de datos, hosting, cómo 
   1. `git switch main && git pull` para traer lo último.
   2. Crear una rama con el formato `tipo/descripcion-corta`, por ejemplo `feature/lista-de-proyectos`, `fix/login-iphone` o `docs/readme`.
 - Al terminar: subir la rama y abrir un pull request contra `main` usando la plantilla.
-- El otro revisa el pull request antes de unirlo. Si uno de los dos va a estar sin conectarse mucho tiempo, se puede acordar otra cosa en Slack.
+- **El PR no necesita revisión: quien lo abre lo une** en cuanto verificó que funciona.
+- La descripción del PR explica **en lenguaje simple, sin términos técnicos**, qué cambió en la app y qué se puede hacer ahora. Es lo que el otro va a leer para enterarse.
+- Si el PR completa un issue, escribir `Cierra #número` en la descripción para que se cierre solo.
 
 ### Commits
 
@@ -88,6 +98,7 @@ Al terminar una sesión, si te lo piden, escribí el resumen con este formato:
 _Anotar acá cada decisión importante con la fecha, para no volver a discutirla._
 
 - 2026-11-17 — Trabajo con ramas + pull requests; `main` protegida.
+- 2026-11-17 — Los PR no se revisan: quien lo abre lo une. Las tareas se reparten con issues asignados.
 - 2026-11-17 — Comunicación en Slack (Rivas-app) y avisos de GitHub en `#github`.
 - 2026-11-17 — Quotes e invoices quedan fuera de la versión 1: se siguen haciendo en Zoho Invoice.
 - 2026-11-17 — No se cobra sales tax.
