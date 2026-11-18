@@ -47,10 +47,11 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
 
   // Historial del año: días y pagado por proyecto.
   const delAnio = (fecha: string) => fecha.startsWith(`${anio}-`);
-  const porProyecto = new Map<string, { nombre: string; cliente: string; dias: number; pagado: number }>();
+  const porProyecto = new Map<string, { id: string; nombre: string; cliente: string; dias: number; pagado: number }>();
   for (const a of asignaciones) {
     if (!a.proyectos) continue;
     const fila = porProyecto.get(a.proyectos.id) ?? {
+      id: a.proyectos.id,
       nombre: a.proyectos.nombre,
       cliente: a.proyectos.clientes?.nombre ?? "",
       dias: 0,
@@ -116,7 +117,7 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
             </div>
             {historial.length === 0 && <p className="text-sm text-texto-suave">Todavía no trabajó en ningún proyecto este año.</p>}
             {historial.map((h) => (
-              <div key={h.nombre} className="flex justify-between gap-3 border-t border-stone-100 py-2 text-sm tabular-nums">
+              <div key={h.id} className="flex justify-between gap-3 border-t border-stone-100 py-2 text-sm tabular-nums">
                 <span className="flex min-w-0 flex-col">
                   <span className="font-medium">{h.nombre}</span>
                   <span className="text-xs text-texto-suave">{h.cliente}</span>

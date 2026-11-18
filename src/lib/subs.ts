@@ -38,14 +38,7 @@ export const OFICIOS = [
   "Ayudante",
 ];
 
-export function dinero(n: number) {
-  return n.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
-    maximumFractionDigits: 2,
-  });
-}
+export { dinero } from "@/lib/cobros";
 
 // "•••-••-1234" (SSN) o "••-•••1234" (EIN).
 export function tinOculto(tipo: SubPrivado["tin_tipo"], ultimos4: string | null) {
