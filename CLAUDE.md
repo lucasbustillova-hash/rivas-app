@@ -54,7 +54,7 @@ La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
 - **iPhone:** PWA, instalable desde Safari con "Agregar a pantalla de inicio".
 - Las claves de Supabase van en `.env.local`, que nunca se sube. `.env.example` lista qué variables hacen falta, sin valores.
 
-_Cómo correr el proyecto y los tests: se completa en el README cuando esté la base (issue #3)._
+Cómo correr el proyecto, probarlo y aplicar cambios en la base: ver el [README](README.md). Los cambios de la base van siempre como migración en `supabase/migrations/` y se aplican con `npx supabase db push --remote`.
 
 ## Cómo trabajamos
 
