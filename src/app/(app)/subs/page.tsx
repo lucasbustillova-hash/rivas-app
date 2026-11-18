@@ -7,7 +7,7 @@ import { MINIMO_1099, anioActual, dinero, iniciales, type SubPrivado } from "@/l
 export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
   const { q } = await searchParams;
   // Se quitan los caracteres que tienen significado en el filtro de Supabase.
-  const busqueda = typeof q === "string" ? q.replace(/[,()%*\\]/g, " ").trim() : "";
+  const busqueda = typeof q === "string" ? q.replace(/[,()%*\\":]/g, " ").trim() : "";
 
   const supabase = await createClient();
   const anio = anioActual();

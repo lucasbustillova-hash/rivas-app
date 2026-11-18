@@ -36,8 +36,9 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
 
   // Pagos del cliente: solo los administradores.
   const admin = await esAdmin();
-  const cobro = admin ? await cargarCobro(supabase, id) : null;
-  const manoDeObra = admin ? await cargarManoDeObra(supabase, id) : null;
+  const [cobro, manoDeObra] = admin
+    ? await Promise.all([cargarCobro(supabase, id), cargarManoDeObra(supabase, id)])
+    : [null, null];
 
   return (
     <main className="flex flex-1 flex-col">
