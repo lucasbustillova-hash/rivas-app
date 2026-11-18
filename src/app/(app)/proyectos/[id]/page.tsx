@@ -2,10 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { datosEstado, formatoFecha, rangoFechas, type Cliente, type Proyecto } from "@/lib/proyectos";
+import { etapaSugerida, type ArchivoProyecto } from "@/lib/fotos";
+import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
+import { Miniaturas, enlacesMini } from "./fotos/miniaturas";
+import { SubirArchivos } from "./fotos/subir-archivos";
+import { BarraCobro } from "./pagos/barra-cobro";
+import { cargarCobro } from "./pagos/datos";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
-// Mano de obra, pagos y fotos se suman con los issues #5 a #9.
+// Mano de obra y pagos a subs se suman con los issues #6 a #8.
 export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id]">) {
   const { id } = await params;
   const supabase = await createClient();
@@ -15,6 +21,21 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
   const proyecto = data as Proyecto & { clientes: Cliente };
   const cliente = proyecto.clientes;
   const estado = datosEstado(proyecto.estado);
+
+  // Las últimas 6 fotos o videos.
+  const { data: ultimos, count: cantidad } = await supabase
+    .from("archivos_proyecto")
+    .select("id, proyecto_id, ruta, tipo, etapa, nota, tomada_en", { count: "exact" })
+    .eq("proyecto_id", id)
+    .order("tomada_en", { ascending: false })
+    .order("creado_en", { ascending: false })
+    .limit(6);
+  const recientes = (ultimos ?? []) as ArchivoProyecto[];
+  const enlaces = await enlacesMini(supabase, recientes);
+
+  // Pagos del cliente: solo los administradores.
+  const admin = await esAdmin();
+  const cobro = admin ? await cargarCobro(supabase, id) : null;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -42,6 +63,42 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
           </Dato>
           <Dato nombre="Alcance">{proyecto.alcance}</Dato>
           <Dato nombre="Notas">{proyecto.notas}</Dato>
+        </section>
+
+        {cobro && (
+          <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-baseline justify-between gap-2">
+              <h2 className="font-semibold">Pagos del cliente</h2>
+              {cobro.resumen && (
+                <Link href={`/proyectos/${proyecto.id}/pagos`} className="text-sm font-semibold text-obra">
+                  Ver pagos ›
+                </Link>
+              )}
+            </div>
+            {cobro.resumen ? (
+              <BarraCobro resumen={cobro.resumen} />
+            ) : (
+              <Link
+                href={`/proyectos/${proyecto.id}/pagos/contrato`}
+                className="flex h-12 items-center justify-center rounded-xl border border-borde font-semibold"
+              >
+                Cargar contrato y plan de pagos
+              </Link>
+            )}
+          </section>
+        )}
+
+        <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
+          <div className="flex items-baseline justify-between gap-2">
+            <h2 className="font-semibold">Fotos y videos</h2>
+            {(cantidad ?? 0) > 0 && (
+              <Link href={`/proyectos/${proyecto.id}/fotos`} className="text-sm font-semibold text-obra">
+                Ver todas ({cantidad}) ›
+              </Link>
+            )}
+          </div>
+          {recientes.length > 0 && <Miniaturas archivos={recientes} enlaces={enlaces} />}
+          <SubirArchivos proyectoId={proyecto.id} etapaInicial={etapaSugerida(proyecto.estado)} />
         </section>
 
         <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">

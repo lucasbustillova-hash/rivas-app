@@ -75,7 +75,7 @@ Ninguno de los dos revisa código; lo importante es saber qué hizo y qué está
 - Al terminar: subir la rama y abrir un pull request contra `main` usando la plantilla.
 - **El PR no necesita revisión: quien lo abre lo une** en cuanto verificó que funciona.
 - La descripción del PR explica **en lenguaje simple, sin términos técnicos**, qué cambió en la app y qué se puede hacer ahora. Es lo que el otro va a leer para enterarse.
-- Si el PR completa un issue, escribir `Cierra #número` en la descripción para que se cierre solo.
+- Si el PR completa un issue, escribir `Closes #número` en la descripción para que se cierre solo. Tiene que ir en inglés: GitHub no entiende "Cierra".
 
 ### Commits
 
@@ -122,3 +122,4 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-17 — Tarifa del sub: una por defecto en su ficha, editable en cada proyecto. Se permiten medios días.
 - 2026-11-17 — Sin modo offline y sin notificaciones.
 - 2026-11-17 — Contador (solo lectura) y QuickBooks quedan para después; primero exportar a Excel.
+- 2026-11-18 — En los PR se escribe `Closes #número` (en inglés): con "Cierra" GitHub no cierra el issue.

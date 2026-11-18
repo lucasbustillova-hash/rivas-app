@@ -4,7 +4,7 @@
 
 ## Por qué
 
-<!-- Qué problema resuelve. Si cierra un issue, escribí: Cierra #número -->
+<!-- Qué problema resuelve. Si cierra un issue, escribí: Closes #número (en inglés, para que GitHub lo cierre solo) -->
 
 ## Cómo probarlo
 
