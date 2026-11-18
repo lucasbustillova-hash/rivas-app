@@ -5,9 +5,10 @@ import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
 import { FormularioAsignacion } from "./formulario-asignacion";
 
-// Elegir al sub que trabaja por día en el proyecto y su tarifa.
-export default async function NuevaAsignacionPage({ params }: PageProps<"/proyectos/[id]/mano-de-obra/nueva">) {
+// Sumar un sub al proyecto: por día (con su tarifa) o por contrato (tarea y monto).
+export default async function NuevaAsignacionPage({ params, searchParams }: PageProps<"/proyectos/[id]/mano-de-obra/nueva">) {
   const { id } = await params;
+  const { modalidad } = await searchParams;
   if (!(await esAdmin())) notFound();
   const supabase = await createClient();
   const [{ data: proyecto }, { data: subs }, { data: privados }] = await Promise.all([
@@ -27,7 +28,7 @@ export default async function NuevaAsignacionPage({ params }: PageProps<"/proyec
 
   return (
     <main className="flex flex-1 flex-col">
-      <Encabezado volver={`/proyectos/${id}/mano-de-obra`} volverTexto="Mano de obra" titulo="Agregar días" subtitulo={proyecto.nombre} />
+      <Encabezado volver={`/proyectos/${id}/mano-de-obra`} volverTexto="Mano de obra" titulo="Agregar sub" subtitulo={proyecto.nombre} />
       {opciones.length === 0 ? (
         <div className="m-4 rounded-2xl bg-white p-5 shadow-sm">
           <p className="font-medium">Todavía no hay subcontratistas cargados.</p>
@@ -36,7 +37,7 @@ export default async function NuevaAsignacionPage({ params }: PageProps<"/proyec
           </Link>
         </div>
       ) : (
-        <FormularioAsignacion proyectoId={id} subs={opciones} />
+        <FormularioAsignacion proyectoId={id} subs={opciones} modalidadInicial={modalidad === "contrato" ? "contrato" : "dia"} />
       )}
     </main>
   );

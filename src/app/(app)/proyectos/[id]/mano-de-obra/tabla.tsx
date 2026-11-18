@@ -11,7 +11,12 @@ export function TablaManoDeObra({
   filas: FilaManoDeObra[];
   totales: { ganado: number; pagado: number; debe: number };
 }) {
-  if (filas.length === 0) return <p className="text-sm text-texto-suave">Todavía no hay subs cargados en este proyecto.</p>;
+  if (filas.length === 0)
+    return (
+      <p className="text-sm text-texto-suave">
+        Todavía no hay subs cargados en este proyecto.
+      </p>
+    );
   return (
     <div className="flex flex-col">
       {filas.map((f) => (
@@ -30,8 +35,16 @@ export function TablaManoDeObra({
           </span>
           <span className="flex shrink-0 flex-col items-end">
             <strong>{dinero(f.resumen.ganado)}</strong>
-            <span className={`text-xs font-semibold ${f.resumen.debe > 0 ? "text-orange-700" : "text-green-800"}`}>
-              {f.resumen.debe > 0 ? `Se le debe ${dinero(f.resumen.debe)}` : f.resumen.debe < 0 ? `Adelantado ${dinero(-f.resumen.debe)}` : "Al día"}
+            <span
+              className={`text-xs font-semibold ${f.resumen.debe > 0 ? "text-orange-700" : "text-green-800"}`}
+            >
+              {f.resumen.debe > 0
+                ? `${f.modalidad === "dia" ? "Se le debe" : "Falta pagar"} ${dinero(f.resumen.debe)}`
+                : f.resumen.debe < 0
+                  ? `Pagado de más ${dinero(-f.resumen.debe)}`
+                  : f.modalidad === "dia"
+                    ? "Al día"
+                    : "Pagado"}
             </span>
           </span>
         </Link>
@@ -41,7 +54,8 @@ export function TablaManoDeObra({
         <span className="flex flex-col items-end">
           <span>{dinero(totales.ganado)}</span>
           <span className="text-xs text-texto-suave">
-            Pagado {dinero(totales.pagado)} · debe {dinero(Math.max(0, totales.debe))}
+            Pagado {dinero(totales.pagado)} · debe{" "}
+            {dinero(Math.max(0, totales.debe))}
           </span>
         </span>
       </div>
