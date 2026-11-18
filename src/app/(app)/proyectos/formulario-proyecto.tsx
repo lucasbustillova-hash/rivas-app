@@ -3,11 +3,9 @@
 import { startTransition, useActionState, useState } from "react";
 import Link from "next/link";
 import { guardarProyecto, type EstadoFormulario } from "./acciones";
+import { campo, etiqueta } from "@/lib/estilos";
 import { ESTADOS, TIPOS_TRABAJO, type Cliente, type Proyecto } from "@/lib/proyectos";
 
-const campo =
-  "w-full rounded-xl border border-borde bg-white px-3.5 py-3 text-base text-tinta outline-none focus:border-obra focus:ring-2 focus:ring-obra/20";
-const etiqueta = "flex flex-col gap-1.5 text-sm font-medium";
 
 type Props = {
   // Edición: el proyecto y su cliente. Nuevo: la lista de clientes para elegir.

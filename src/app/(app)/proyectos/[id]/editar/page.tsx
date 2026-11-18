@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Cliente, Proyecto } from "@/lib/proyectos";
 import { FormularioProyecto } from "../../formulario-proyecto";
-import { Encabezado } from "../../encabezado";
+import { Encabezado } from "@/components/encabezado";
 
 export default async function EditarProyectoPage({ params }: PageProps<"/proyectos/[id]/editar">) {
   const { id } = await params;

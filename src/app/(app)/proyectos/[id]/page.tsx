@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { datosEstado, formatoFecha, rangoFechas, type Cliente, type Proyecto } from "@/lib/proyectos";
-import { Encabezado } from "../encabezado";
+import { Encabezado } from "@/components/encabezado";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
 // Mano de obra, pagos y fotos se suman con los issues #5 a #9.
