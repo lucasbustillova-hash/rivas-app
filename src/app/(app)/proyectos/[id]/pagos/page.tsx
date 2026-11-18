@@ -6,9 +6,10 @@ import { PLANES, dinero, nombreMetodo } from "@/lib/cobros";
 import { formatoFecha } from "@/lib/proyectos";
 import { Encabezado } from "@/components/encabezado";
 import { BarraCobro } from "./barra-cobro";
-import { BorrarPago } from "./borrar-pago";
+import { BorrarPago } from "@/components/borrar-pago";
+import { FormularioPago } from "@/components/formulario-pago";
+import { borrarPago, registrarPago } from "./acciones";
 import { cargarCobro } from "./datos";
-import { FormularioPago } from "./formulario-pago";
 
 const CHIP = {
   pagada: "bg-green-100 text-green-800",
@@ -39,7 +40,7 @@ export default async function PagosPage({ params }: PageProps<"/proyectos/[id]/p
           <BarraCobro resumen={resumen} />
         </section>
 
-        <FormularioPago proyectoId={id} sugerido={sugerido} />
+        <FormularioPago guardar={registrarPago.bind(null, id)} sugerido={sugerido} />
 
         <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
           <div className="flex items-baseline justify-between pb-2">
@@ -81,7 +82,7 @@ export default async function PagosPage({ params }: PageProps<"/proyectos/[id]/p
               </span>
               <span className="flex shrink-0 flex-col items-end gap-0.5">
                 <strong>{dinero(Number(p.monto))}</strong>
-                <BorrarPago id={p.id} texto={dinero(Number(p.monto))} />
+                <BorrarPago borrar={borrarPago.bind(null, p.id)} texto={`el pago de ${dinero(Number(p.monto))}`} />
               </span>
             </div>
           ))}

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
 import { MINIMO_1099, anioActual, dinero, tinOculto, type Sub, type SubPrivado } from "@/lib/subs";
+import { textoDias } from "@/lib/mano-de-obra";
 import { MostrarTin } from "../mostrar-tin";
 import { SubirW9 } from "../subir-w9";
 
@@ -121,7 +122,7 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
                   <span className="text-xs text-texto-suave">{h.cliente}</span>
                 </span>
                 <span className="shrink-0 text-right">
-                  {h.dias} días · <strong>{dinero(h.pagado)}</strong>
+                  {textoDias(h.dias)} · <strong>{dinero(h.pagado)}</strong>
                 </span>
               </div>
             ))}
@@ -129,7 +130,7 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
               <div className="flex justify-between border-t-2 border-tinta pt-2 font-semibold tabular-nums">
                 <span>Total del año</span>
                 <span>
-                  {totalDias} días · {dinero(totalPagado)}
+                  {textoDias(totalDias)} · {dinero(totalPagado)}
                 </span>
               </div>
             )}

@@ -9,9 +9,11 @@ import { Miniaturas, enlacesMini } from "./fotos/miniaturas";
 import { SubirArchivos } from "./fotos/subir-archivos";
 import { BarraCobro } from "./pagos/barra-cobro";
 import { cargarCobro } from "./pagos/datos";
+import { cargarManoDeObra } from "./mano-de-obra/datos";
+import { TablaManoDeObra } from "./mano-de-obra/tabla";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
-// Mano de obra y pagos a subs se suman con los issues #6 a #8.
+// Mano de obra por contrato se suma con el issue #8.
 export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id]">) {
   const { id } = await params;
   const supabase = await createClient();
@@ -36,6 +38,7 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
   // Pagos del cliente: solo los administradores.
   const admin = await esAdmin();
   const cobro = admin ? await cargarCobro(supabase, id) : null;
+  const manoDeObra = admin ? await cargarManoDeObra(supabase, id) : null;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -85,6 +88,18 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
                 Cargar contrato y plan de pagos
               </Link>
             )}
+          </section>
+        )}
+
+        {manoDeObra && (
+          <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-baseline justify-between gap-2 pb-2">
+              <h2 className="font-semibold">Mano de obra</h2>
+              <Link href={`/proyectos/${proyecto.id}/mano-de-obra/nueva`} className="text-sm font-semibold text-obra">
+                + Agregar días
+              </Link>
+            </div>
+            <TablaManoDeObra filas={manoDeObra.filas} totales={manoDeObra.totales} />
           </section>
         )}
 

@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { borrarPago } from "./acciones";
 
 // Borra un pago anotado por error (pide confirmación).
-export function BorrarPago({ id, texto }: { id: string; texto: string }) {
+export function BorrarPago({ borrar: borrarAccion, texto }: { borrar: () => Promise<{ error?: string }>; texto: string }) {
   const [borrando, setBorrando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const borrar = async () => {
-    if (!confirm(`¿Borrar el pago de ${texto}? No se puede deshacer.`)) return;
+    if (!confirm(`¿Borrar ${texto}? No se puede deshacer.`)) return;
     setBorrando(true);
-    const r = await borrarPago(id);
+    const r = await borrarAccion();
     if (r.error) setError(r.error);
     setBorrando(false);
   };
