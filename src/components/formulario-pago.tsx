@@ -3,20 +3,30 @@
 import { startTransition, useActionState, useState } from "react";
 import { METODOS } from "@/lib/cobros";
 import { campo, etiqueta } from "@/lib/estilos";
-import { registrarPago, type EstadoFormulario } from "./acciones";
+
+export type EstadoPago = { error: string | null; listo?: number };
 
 function hoyLocal() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-// Anotar un pago recibido: fecha, monto y forma de pago.
-export function FormularioPago({ proyectoId, sugerido }: { proyectoId: string; sugerido: number | null }) {
+// Anotar un pago (del cliente o a un sub): fecha, monto y forma de pago.
+export function FormularioPago({
+  guardar,
+  sugerido,
+  boton = "+ Anotar pago recibido",
+  titulo = "Pago recibido",
+  listoTexto = "Pago anotado.",
+}: {
+  guardar: (prev: EstadoPago, datos: FormData) => Promise<EstadoPago>;
+  sugerido: number | null;
+  boton?: string;
+  titulo?: string;
+  listoTexto?: string;
+}) {
   const [abierto, setAbierto] = useState(false);
-  const [estado, accion, guardando] = useActionState<EstadoFormulario & { listo?: number }, FormData>(
-    registrarPago.bind(null, proyectoId),
-    { error: null },
-  );
+  const [estado, accion, guardando] = useActionState<EstadoPago, FormData>(guardar, { error: null });
   const [ultimoListo, setUltimoListo] = useState<number | undefined>(undefined);
 
   // Al guardar bien, se cierra el formulario.
@@ -28,13 +38,13 @@ export function FormularioPago({ proyectoId, sugerido }: { proyectoId: string; s
   if (!abierto) {
     return (
       <div className="flex flex-col gap-2">
-        {estado.listo && !guardando && <p className="text-sm font-semibold text-green-800">Pago anotado.</p>}
+        {estado.listo && !guardando && <p className="text-sm font-semibold text-green-800">{listoTexto}</p>}
         <button
           type="button"
           onClick={() => setAbierto(true)}
           className="h-12 rounded-xl bg-obra font-semibold text-white active:bg-obra-oscuro"
         >
-          + Anotar pago recibido
+          {boton}
         </button>
       </div>
     );
@@ -49,7 +59,7 @@ export function FormularioPago({ proyectoId, sugerido }: { proyectoId: string; s
       }}
       className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm"
     >
-      <h2 className="font-semibold">Pago recibido</h2>
+      <h2 className="font-semibold">{titulo}</h2>
       <div className="grid grid-cols-2 gap-2">
         <label className={etiqueta}>
           Monto (USD)
