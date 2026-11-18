@@ -13,7 +13,6 @@ import { cargarManoDeObra } from "./mano-de-obra/datos";
 import { TablaManoDeObra } from "./mano-de-obra/tabla";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
-// Mano de obra por contrato se suma con el issue #8.
 export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id]">) {
   const { id } = await params;
   const supabase = await createClient();
@@ -95,8 +94,8 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
           <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-baseline justify-between gap-2 pb-2">
               <h2 className="font-semibold">Mano de obra</h2>
-              <Link href={`/proyectos/${proyecto.id}/mano-de-obra/nueva`} className="text-sm font-semibold text-obra">
-                + Agregar días
+              <Link href={`/proyectos/${proyecto.id}/mano-de-obra`} className="text-sm font-semibold text-obra">
+                + Agregar sub
               </Link>
             </div>
             <TablaManoDeObra filas={manoDeObra.filas} totales={manoDeObra.totales} />

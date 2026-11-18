@@ -2,17 +2,35 @@
 
 import { startTransition, useActionState, useState } from "react";
 import { campo, etiqueta } from "@/lib/estilos";
-import { crearAsignacionDia, type EstadoFormulario } from "../acciones";
+import type { Modalidad } from "@/lib/mano-de-obra";
+import { crearAsignacionContrato, crearAsignacionDia, type EstadoFormulario } from "../acciones";
 
 type Opcion = { id: string; nombre: string; oficio: string | null; tarifa: number | null };
 
-export function FormularioAsignacion({ proyectoId, subs }: { proyectoId: string; subs: Opcion[] }) {
-  const [estado, accion, guardando] = useActionState<EstadoFormulario, FormData>(
+// Sumar un sub al proyecto: por día (con tarifa) o por contrato (tarea con monto cerrado).
+export function FormularioAsignacion({
+  proyectoId,
+  subs,
+  modalidadInicial,
+}: {
+  proyectoId: string;
+  subs: Opcion[];
+  modalidadInicial: Modalidad;
+}) {
+  const [estadoDia, accionDia, guardandoDia] = useActionState<EstadoFormulario, FormData>(
     crearAsignacionDia.bind(null, proyectoId),
     { error: null },
   );
+  const [estadoContrato, accionContrato, guardandoContrato] = useActionState<EstadoFormulario, FormData>(
+    crearAsignacionContrato.bind(null, proyectoId),
+    { error: null },
+  );
+  const [modalidad, setModalidad] = useState<Modalidad>(modalidadInicial);
   const [subId, setSubId] = useState("");
   const [tarifa, setTarifa] = useState("");
+  const porDia = modalidad === "dia";
+  const error = porDia ? estadoDia.error : estadoContrato.error;
+  const guardando = guardandoDia || guardandoContrato;
 
   const elegir = (id: string) => {
     setSubId(id);
@@ -25,10 +43,32 @@ export function FormularioAsignacion({ proyectoId, subs }: { proyectoId: string;
       onSubmit={(e) => {
         e.preventDefault();
         const datos = new FormData(e.currentTarget);
-        startTransition(() => accion(datos));
+        startTransition(() => (porDia ? accionDia(datos) : accionContrato(datos)));
       }}
       className="flex flex-col gap-4 px-4 py-4"
     >
+      <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Cómo se le paga">
+        {(
+          [
+            { valor: "dia", nombre: "Por día" },
+            { valor: "contrato", nombre: "Por contrato" },
+          ] as const
+        ).map((m) => (
+          <button
+            key={m.valor}
+            type="button"
+            role="radio"
+            aria-checked={modalidad === m.valor}
+            onClick={() => setModalidad(m.valor)}
+            className={`h-12 rounded-xl border font-semibold ${
+              modalidad === m.valor ? "border-tinta bg-tinta text-white" : "border-borde bg-white"
+            }`}
+          >
+            {m.nombre}
+          </button>
+        ))}
+      </div>
+
       <section className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm">
         <label className={etiqueta}>
           Subcontratista
@@ -44,31 +84,50 @@ export function FormularioAsignacion({ proyectoId, subs }: { proyectoId: string;
             ))}
           </select>
         </label>
-        <label className={etiqueta}>
-          Tarifa por día en este proyecto (USD)
-          <input
-            name="tarifa_diaria"
-            inputMode="decimal"
-            required
-            placeholder="Ej.: 220"
-            value={tarifa}
-            onChange={(e) => setTarifa(e.target.value)}
-            className={campo}
-          />
-          <span className="text-xs font-normal text-texto-suave">Viene de la ficha del sub; se puede cambiar solo para este proyecto.</span>
-        </label>
-        <label className={etiqueta}>
-          Qué hace (opcional)
-          <input name="descripcion" maxLength={200} placeholder="Ej.: ayudante de drywall" className={campo} />
-        </label>
+
+        {porDia ? (
+          <>
+            <label className={etiqueta}>
+              Tarifa por día en este proyecto (USD)
+              <input
+                name="tarifa_diaria"
+                inputMode="decimal"
+                required
+                placeholder="Ej.: 220"
+                value={tarifa}
+                onChange={(e) => setTarifa(e.target.value)}
+                className={campo}
+              />
+              <span className="text-xs font-normal text-texto-suave">
+                Viene de la ficha del sub; se puede cambiar solo para este proyecto.
+              </span>
+            </label>
+            <label className={etiqueta}>
+              Qué hace (opcional)
+              <input name="descripcion" maxLength={200} placeholder="Ej.: ayudante de drywall" className={campo} />
+            </label>
+          </>
+        ) : (
+          <>
+            <label className={etiqueta}>
+              Tarea
+              <input name="descripcion" required maxLength={200} placeholder="Ej.: colgar sheetrock" className={campo} />
+            </label>
+            <label className={etiqueta}>
+              Monto acordado (USD)
+              <input name="monto_contrato" inputMode="decimal" required placeholder="Ej.: 3200" className={campo} />
+            </label>
+          </>
+        )}
       </section>
-      {estado.error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{estado.error}</p>}
+
+      {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
       <button
         type="submit"
         disabled={guardando}
         className="h-12 rounded-xl bg-obra font-semibold text-white active:bg-obra-oscuro disabled:opacity-60"
       >
-        {guardando ? "Guardando…" : "Seguir: marcar los días"}
+        {guardando ? "Guardando…" : porDia ? "Seguir: marcar los días" : "Guardar contrato"}
       </button>
     </form>
   );

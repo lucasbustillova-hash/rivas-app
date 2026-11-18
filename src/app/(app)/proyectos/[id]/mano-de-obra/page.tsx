@@ -6,7 +6,7 @@ import { Encabezado } from "@/components/encabezado";
 import { cargarManoDeObra } from "./datos";
 import { TablaManoDeObra } from "./tabla";
 
-// Mano de obra del proyecto: subs por día (y por contrato), con lo que se les debe.
+// Mano de obra del proyecto: subs por día y por contrato, con lo que se les debe.
 export default async function ManoDeObraPage({ params }: PageProps<"/proyectos/[id]/mano-de-obra">) {
   const { id } = await params;
   if (!(await esAdmin())) notFound();
@@ -19,12 +19,20 @@ export default async function ManoDeObraPage({ params }: PageProps<"/proyectos/[
     <main className="flex flex-1 flex-col">
       <Encabezado volver={`/proyectos/${id}`} volverTexto={proyecto.nombre} titulo="Mano de obra" />
       <div className="flex flex-col gap-3 px-4 py-4">
-        <Link
-          href={`/proyectos/${id}/mano-de-obra/nueva`}
-          className="flex h-12 items-center justify-center rounded-xl bg-obra font-semibold text-white active:bg-obra-oscuro"
-        >
-          + Agregar días de un sub
-        </Link>
+        <div className="grid grid-cols-2 gap-2">
+          <Link
+            href={`/proyectos/${id}/mano-de-obra/nueva`}
+            className="flex h-12 items-center justify-center rounded-xl bg-obra text-sm font-semibold text-white active:bg-obra-oscuro"
+          >
+            + Sub por día
+          </Link>
+          <Link
+            href={`/proyectos/${id}/mano-de-obra/nueva?modalidad=contrato`}
+            className="flex h-12 items-center justify-center rounded-xl bg-obra text-sm font-semibold text-white active:bg-obra-oscuro"
+          >
+            + Sub por contrato
+          </Link>
+        </div>
         <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
           <h2 className="pb-2 font-semibold">Subs en este proyecto</h2>
           <TablaManoDeObra filas={filas} totales={totales} />

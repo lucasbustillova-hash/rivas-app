@@ -18,12 +18,15 @@ export function FormularioPago({
   boton = "+ Anotar pago recibido",
   titulo = "Pago recibido",
   listoTexto = "Pago anotado.",
+  adelanto,
 }: {
   guardar: (prev: EstadoPago, datos: FormData) => Promise<EstadoPago>;
   sugerido: number | null;
   boton?: string;
   titulo?: string;
   listoTexto?: string;
+  /** Si se indica, pregunta si es adelanto o pago final (el valor es la opción marcada al abrir). */
+  adelanto?: boolean;
 }) {
   const [abierto, setAbierto] = useState(false);
   const [estado, accion, guardando] = useActionState<EstadoPago, FormData>(guardar, { error: null });
@@ -77,6 +80,31 @@ export function FormularioPago({
           <input type="date" name="fecha" required defaultValue={hoyLocal()} max={hoyLocal()} className={campo} />
         </label>
       </div>
+      {adelanto !== undefined && (
+        <fieldset className="flex flex-col">
+          <legend className="pb-1.5 text-sm font-medium">Tipo de pago</legend>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { valor: "si", nombre: "Adelanto" },
+              { valor: "no", nombre: "Pago final" },
+            ].map((o) => (
+              <label
+                key={o.valor}
+                className="flex h-11 cursor-pointer items-center justify-center rounded-xl border border-borde text-sm font-semibold has-checked:border-tinta has-checked:bg-tinta has-checked:text-white"
+              >
+                <input
+                  type="radio"
+                  name="es_adelanto"
+                  value={o.valor}
+                  defaultChecked={(o.valor === "si") === adelanto}
+                  className="sr-only"
+                />
+                {o.nombre}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
       <fieldset className="flex flex-col">
         <legend className="pb-1.5 text-sm font-medium">Forma de pago</legend>
         <div className="flex flex-wrap gap-2">

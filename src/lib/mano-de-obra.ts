@@ -10,6 +10,7 @@ export type Asignacion = {
   tarifa_diaria: number | null;
   monto_contrato: number | null;
   descripcion: string | null;
+  contrato_ruta?: string | null;
 };
 
 export type DiaTrabajado = { id: string; fecha: string; fraccion: number; tarifa: number };
