@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
-import { Encabezado } from "../../../encabezado";
+import { Encabezado } from "@/components/encabezado";
 import { cargarCobro } from "../datos";
 import { FormularioContrato } from "../formulario-contrato";
 

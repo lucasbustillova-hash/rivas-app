@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { CARPETA, datosEtapa, diaDe, tituloDia, type ArchivoProyecto } from "@/lib/fotos";
-import { Encabezado } from "../../../encabezado";
+import { Encabezado } from "@/components/encabezado";
 import { EditarArchivo } from "./editar-archivo";
 
 // Una foto o video en grande, con su etapa, fecha y nota.

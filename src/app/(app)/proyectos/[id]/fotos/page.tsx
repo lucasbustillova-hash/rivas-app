@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ETAPAS, datosEtapa, diaDe, etapaSugerida, tituloDia, type ArchivoProyecto } from "@/lib/fotos";
-import { Encabezado } from "../../encabezado";
+import { Encabezado } from "@/components/encabezado";
 import { Miniaturas, enlacesMini } from "./miniaturas";
 import { SubirArchivos } from "./subir-archivos";
 

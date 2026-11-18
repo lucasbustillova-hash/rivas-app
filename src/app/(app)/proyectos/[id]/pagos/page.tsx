@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { PLANES, dinero, nombreMetodo } from "@/lib/cobros";
 import { formatoFecha } from "@/lib/proyectos";
-import { Encabezado } from "../../encabezado";
+import { Encabezado } from "@/components/encabezado";
 import { BarraCobro } from "./barra-cobro";
 import { BorrarPago } from "./borrar-pago";
 import { cargarCobro } from "./datos";

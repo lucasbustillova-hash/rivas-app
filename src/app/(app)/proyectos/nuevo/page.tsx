@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { FormularioProyecto } from "../formulario-proyecto";
-import { Encabezado } from "../encabezado";
+import { Encabezado } from "@/components/encabezado";
 
 export default async function NuevoProyectoPage() {
   const supabase = await createClient();

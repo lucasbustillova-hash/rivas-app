@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { datosEstado, formatoFecha, rangoFechas, type Cliente, type Proyecto } from "@/lib/proyectos";
 import { etapaSugerida, type ArchivoProyecto } from "@/lib/fotos";
 import { esAdmin } from "@/lib/permisos";
-import { Encabezado } from "../encabezado";
+import { Encabezado } from "@/components/encabezado";
 import { Miniaturas, enlacesMini } from "./fotos/miniaturas";
 import { SubirArchivos } from "./fotos/subir-archivos";
 import { BarraCobro } from "./pagos/barra-cobro";
