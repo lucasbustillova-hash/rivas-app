@@ -4,6 +4,7 @@ import { Logo } from "@/components/logo";
 import { redirect } from "next/navigation";
 import { getVerifiedUser } from "@/lib/supabase/server";
 import { BotonSalir } from "./boton-salir";
+import { EnlaceRespaldo } from "./enlace-respaldo";
 import { Navegacion } from "./navegacion";
 
 // Todo lo que está dentro de (app) requiere sesión iniciada y verificación en dos pasos.
@@ -16,7 +17,12 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           <Link href="/" aria-label="Inicio">
             <Logo className="w-36" priority />
           </Link>
-          <BotonSalir />
+          <div className="flex items-center gap-1">
+            <Suspense fallback={null}>
+              <EnlaceRespaldo />
+            </Suspense>
+            <BotonSalir />
+          </div>
         </div>
       </header>
       {/* pb deja lugar para la barra de abajo. */}
