@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Logo } from "@/components/logo";
 
 type Estado =
   | { tipo: "cargando" }
@@ -90,6 +91,7 @@ export default function VerificarPage() {
   return (
     <main className="flex flex-1 flex-col bg-tinta text-white safe-top safe-bottom">
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-6">
+        <Logo className="w-44" priority />
         <div className="flex flex-col gap-1">
           <span className="text-xs font-semibold uppercase tracking-widest text-obra-claro">
             Verificación en dos pasos

@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   title: "NAHOMY Pro",
   description: "Proyectos, subcontratistas y pagos de NAHOMY Pro Construction",
   icons: {
-    apple: [{ url: "/pwa-icon/180", sizes: "180x180", type: "image/png" }],
+    icon: [{ url: "/icono-64.png", sizes: "64x64", type: "image/png" }],
+    apple: [{ url: "/icono-180.png", sizes: "180x180", type: "image/png" }],
   },
   appleWebApp: {
     capable: true,
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1C1917",
+  themeColor: "#1C2B1F",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { Logo } from "@/components/logo";
 import { redirect } from "next/navigation";
 import { getVerifiedUser } from "@/lib/supabase/server";
 import { BotonSalir } from "./boton-salir";
@@ -11,9 +13,9 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
     <div className="flex flex-1 flex-col">
       <header className="safe-top bg-tinta px-5 pb-4 text-white">
         <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-obra-claro">
-            NAHOMY Pro Construction
-          </span>
+          <Link href="/" aria-label="Inicio">
+            <Logo className="w-36" priority />
+          </Link>
           <BotonSalir />
         </div>
       </header>
