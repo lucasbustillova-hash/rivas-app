@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
-/* Colores de la app (los mismos de los bocetos) */
+/* Colores de la app, sacados del logo de NAHOMY:
+   verde oscuro #1c2b1f y naranja #ee512e. */
 @theme inline {
-  --color-tinta: #1c1917;
-  --color-tinta-suave: #292524;
-  --color-piedra: #f5f5f4;
-  --color-borde: #d6d3d1;
-  --color-texto-suave: #57534e;
-  --color-obra: #c2410c;
-  --color-obra-oscuro: #9a3412;
-  --color-obra-claro: #fdba74;
+  --color-tinta: #1c2b1f; /* verde del logo: encabezados y texto principal */
+  --color-tinta-suave: #2a3d2f;
+  --color-piedra: #f4f5f3; /* fondo de las pantallas */
+  --color-borde: #d5d9d5;
+  --color-texto-suave: #556158;
+  --color-marca: #ee512e; /* naranja exacto del logo */
+  /* Naranja un poco más oscuro para botones y enlaces: con el exacto,
+     el texto blanco encima no se lee bien al sol. */
+  --color-obra: #d9441f;
+  --color-obra-oscuro: #b23518;
+  --color-obra-claro: #f7a58f; /* naranja claro sobre el fondo verde */
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-titulo: var(--font-space-grotesk), system-ui, sans-serif;
 }

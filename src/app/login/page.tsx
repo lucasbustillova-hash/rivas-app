@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Logo } from "@/components/logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,10 +38,8 @@ export default function LoginPage() {
   return (
     <main className="flex flex-1 flex-col bg-tinta text-white safe-top safe-bottom">
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-8 px-6">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs font-semibold uppercase tracking-widest text-obra-claro">
-            NAHOMY Pro Construction
-          </span>
+        <div className="flex flex-col gap-8">
+          <Logo className="w-60" priority />
           <h1 className="font-titulo text-3xl font-bold">Iniciar sesión</h1>
         </div>
 
