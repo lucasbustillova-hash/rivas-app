@@ -53,10 +53,43 @@ export function FormularioSub({ sub, privado, admin }: Props) {
           Correo
           <input name="correo" type="email" defaultValue={sub?.correo ?? ""} autoComplete="off" className={campo} />
         </label>
-        <label className={etiqueta}>
-          Dirección
-          <input name="direccion" defaultValue={sub?.direccion ?? ""} autoComplete="off" className={campo} />
-        </label>
+        <fieldset className="flex flex-col gap-3">
+          <legend className="pb-1.5 text-sm font-medium">Dirección (va en la 1099)</legend>
+          <label className={etiqueta}>
+            <span className="text-xs font-normal text-texto-suave">Calle y número</span>
+            <input name="direccion" defaultValue={sub?.direccion ?? ""} autoComplete="off" placeholder="Ej.: 123 Main St, Apt 4" className={campo} />
+          </label>
+          <label className={etiqueta}>
+            <span className="text-xs font-normal text-texto-suave">Ciudad</span>
+            <input name="ciudad" defaultValue={sub?.ciudad ?? ""} autoComplete="off" className={campo} />
+          </label>
+          <div className="grid grid-cols-[6rem_1fr] gap-3">
+            <label className={etiqueta}>
+              <span className="text-xs font-normal text-texto-suave">Estado</span>
+              <input
+                name="estado"
+                defaultValue={sub?.estado ?? ""}
+                maxLength={2}
+                autoCapitalize="characters"
+                autoComplete="off"
+                placeholder="FL"
+                className={`${campo} uppercase`}
+              />
+            </label>
+            <label className={etiqueta}>
+              <span className="text-xs font-normal text-texto-suave">Código postal</span>
+              <input
+                name="codigo_postal"
+                defaultValue={sub?.codigo_postal ?? ""}
+                inputMode="numeric"
+                maxLength={10}
+                autoComplete="off"
+                placeholder="32801"
+                className={campo}
+              />
+            </label>
+          </div>
+        </fieldset>
         <label className={etiqueta}>
           Notas
           <textarea name="notas" rows={2} defaultValue={sub?.notas ?? ""} className={campo} />

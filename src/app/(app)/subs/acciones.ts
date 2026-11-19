@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient, getVerifiedUser } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
-import { tinCompleto } from "@/lib/subs";
+import { leerEstadoYZip, tinCompleto } from "@/lib/subs";
 
 export type EstadoFormulario = { error: string | null };
 
@@ -22,11 +22,16 @@ export async function guardarSub(_prev: EstadoFormulario, formData: FormData): P
   if (!user) return { error: "Tu sesión se cerró. Volvé a entrar." };
 
   const id = texto(formData, "id");
+  const lugar = leerEstadoYZip(texto(formData, "estado"), texto(formData, "codigo_postal"));
+  if (lugar.error) return { error: lugar.error };
   const sub = {
     nombre: texto(formData, "nombre"),
     telefono: texto(formData, "telefono"),
     correo: texto(formData, "correo"),
     direccion: texto(formData, "direccion"),
+    ciudad: texto(formData, "ciudad"),
+    estado: lugar.estado,
+    codigo_postal: lugar.codigo_postal,
     oficio: texto(formData, "oficio"),
     notas: texto(formData, "notas"),
     activo: formData.get("activo") !== "no",

@@ -5,7 +5,10 @@ export type Sub = {
   nombre: string;
   telefono: string | null;
   correo: string | null;
-  direccion: string | null;
+  direccion: string | null; // calle y número
+  ciudad: string | null;
+  estado: string | null; // dos letras, ej. FL
+  codigo_postal: string | null;
   oficio: string | null;
   activo: boolean;
   notas: string | null;
@@ -70,4 +73,35 @@ export function iniciales(nombre: string) {
 // Año en curso en Florida (para el historial y la 1099).
 export function anioActual() {
   return Number(new Intl.DateTimeFormat("en-US", { year: "numeric", timeZone: "America/New_York" }).format(new Date()));
+}
+
+// Dirección en una o dos líneas: "123 Main St" y "Orlando, FL 32801".
+export function lineasDireccion(d: {
+  direccion: string | null;
+  ciudad: string | null;
+  estado: string | null;
+  codigo_postal: string | null;
+}) {
+  const segunda = [d.ciudad, [d.estado, d.codigo_postal].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+  return [d.direccion, segunda].filter(Boolean) as string[];
+}
+
+// ¿Está la dirección completa como la pide la 1099?
+export function direccionCompleta(d: Parameters<typeof lineasDireccion>[0]) {
+  return Boolean(d.direccion && d.ciudad && d.estado && d.codigo_postal);
+}
+
+// Normaliza estado (2 letras) y código postal; devuelve un error si no son válidos.
+export function leerEstadoYZip(estadoTxt: string | null, zipTxt: string | null) {
+  const estado = estadoTxt ? estadoTxt.trim().toUpperCase() : null;
+  const codigo_postal = zipTxt ? zipTxt.trim() : null;
+  if (estado && !/^[A-Z]{2}$/.test(estado)) return { error: "El estado son dos letras, por ejemplo FL." } as const;
+  if (codigo_postal && !/^[0-9]{5}(-[0-9]{4})?$/.test(codigo_postal))
+    return { error: "El código postal son 5 números, por ejemplo 32801." } as const;
+  return { estado, codigo_postal, error: null } as const;
+}
+
+// EIN con guion: 12-3456789.
+export function einConGuion(ein: string) {
+  return `${ein.slice(0, 2)}-${ein.slice(2)}`;
 }

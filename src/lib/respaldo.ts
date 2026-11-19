@@ -9,6 +9,7 @@ configure({ useWebWorkers: false });
 
 // Tablas que entran en el respaldo, en el orden en que habría que restaurarlas.
 export const TABLAS = [
+  "empresa",
   "clientes",
   "proyectos",
   "archivos_proyecto",
