@@ -1,0 +1,12 @@
+# Configuración para publicar la app en Netlify.
+# Netlify reconoce Next.js solo y usa su adaptador oficial (OpenNext).
+# Las claves de Supabase NO van acá: se cargan en Netlify →
+# Site configuration → Environment variables (ver el README).
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 necesita Node 20.9 o más nuevo.
+  NODE_VERSION = "22"
