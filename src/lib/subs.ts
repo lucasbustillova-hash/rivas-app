@@ -24,6 +24,11 @@ export type SubPrivado = {
 // A partir de este monto pagado en el año, el sub necesita 1099-NEC.
 export const MINIMO_1099 = 2000;
 
+// El mínimo para la 1099-NEC subió de $600 a $2,000 para los pagos desde 2026.
+export function minimo1099(anio: number) {
+  return anio >= 2026 ? MINIMO_1099 : 600;
+}
+
 // Sugerencias para "Oficio"; se puede escribir otro.
 export const OFICIOS = [
   "Drywall",
