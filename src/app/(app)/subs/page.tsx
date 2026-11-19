@@ -73,6 +73,17 @@ export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
       </div>
 
       <div className="flex flex-col gap-2 px-4 py-4">
+        {admin && (
+          <Link
+            href="/subs/reporte-1099"
+            className="mb-1 flex items-center justify-between rounded-xl border border-borde bg-white px-4 py-3 text-sm font-semibold active:bg-stone-50"
+          >
+            <span>Reporte 1099 y planilla para el contador</span>
+            <span aria-hidden="true" className="text-obra">
+              ›
+            </span>
+          </Link>
+        )}
         {sinW9.length > 0 && (
           <div role="alert" className="mb-1 rounded-xl bg-orange-100 p-3.5 text-sm text-orange-900">
             <strong>
