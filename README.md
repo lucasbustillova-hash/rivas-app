@@ -11,6 +11,8 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso.
 - **Subcontratistas:** ficha con contacto y datos para la 1099. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
 - **Mano de obra:** subs por día (los días se marcan en un calendario, con medios días) o por contrato (adelantos y pago final). Muestra cuánto se le debe a cada uno.
+- **Reporte 1099:** a quién hay que hacerle la 1099-NEC en el año, qué datos le faltan y una planilla con contraseña para cualquier contador (resumen por sub y detalle de cada pago). Los datos de la empresa como pagador se cargan ahí una sola vez.
+- **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
 
 Montos, pagos y datos de impuestos los ven **solo los administradores**.
 
@@ -128,12 +130,29 @@ Para pedirle a Claude un cambio en la base: *"agregá una migración para …"*.
 |---|---|
 | `src/app/(app)/` | Las pantallas (todas piden sesión iniciada con verificación en dos pasos) |
 | `src/app/(app)/proyectos/[id]/` | Ficha del proyecto y sus secciones: `fotos/`, `pagos/` (cliente), `mano-de-obra/` (subs) |
-| `src/app/(app)/subs/` | Subcontratistas |
+| `src/app/(app)/subs/` | Subcontratistas; `reporte-1099/` es el reporte y la planilla para el contador |
+| `src/app/(app)/respaldo/` | Descargar y comprobar respaldos (el armado está en `src/lib/respaldo.ts`) |
 | `src/lib/` | Textos, cálculos y tipos compartidos (por ejemplo `cobros.ts`, `mano-de-obra.ts`) |
 | `src/components/` | Piezas que se usan en varias pantallas (encabezado, formulario de pago…) |
 | `supabase/migrations/` | Estructura de la base de datos |
 
 Los archivos `acciones.ts` de cada carpeta son los que guardan en la base; siempre comprueban en el servidor que el usuario sea administrador cuando corresponde.
+
+## Publicar la app (Netlify)
+
+La app se publica en Netlify desde la cuenta de Mario. La configuración está en [`netlify.toml`](netlify.toml): Netlify reconoce Next.js solo, así que no hay que tocar nada de la compilación.
+
+**Primera vez** (unos 10 minutos):
+
+1. En **app.netlify.com** → **Add new project** → **Import an existing project** → **GitHub** → elegir `rivas-app`.
+2. Antes de publicar, en **Environment variables** agregar las dos de `.env.local`: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. **Nunca** la *secret key* ni la *service_role*.
+3. **Deploy**. Al terminar da una dirección tipo `algo.netlify.app`; el nombre se cambia en la configuración del proyecto en Netlify (**Project configuration**, en algunas cuentas **Site configuration**), por ejemplo a `nahomy-pro`.
+4. En Supabase → **Authentication → URL Configuration**, poner esa dirección como **Site URL**.
+5. En el iPhone: abrirla en **Safari** → **Compartir** → **Agregar a pantalla de inicio**.
+
+**Después:** cada pull request que se une a `main` se publica solo en unos minutos. Si una publicación falla, Netlify sigue mostrando la versión anterior; el error está en **Deploys** → la publicación que falló → **Deploy log**.
+
+Si en el paso 1 no aparece `rivas-app`, la cuenta de GitHub de quien publica no tiene acceso al repositorio: hay que darle acceso en GitHub o pasar el repo a una organización de los dos.
 
 ## Usuarios
 
