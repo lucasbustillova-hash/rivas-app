@@ -6,6 +6,7 @@ import { Encabezado } from "@/components/encabezado";
 import { anioActual, dinero, tinOculto } from "@/lib/subs";
 import { cargarReporte1099, type Fila1099 } from "./datos";
 import { ExportarContador } from "./exportar-contador";
+import { DatosEmpresa } from "./datos-empresa";
 
 // Reporte para las 1099-NEC: a quién hay que hacérsela en el año y qué datos faltan.
 export default async function Reporte1099Page({ searchParams }: PageProps<"/subs/reporte-1099">) {
@@ -17,7 +18,7 @@ export default async function Reporte1099Page({ searchParams }: PageProps<"/subs
   const anios = [actual, actual - 1, actual - 2];
 
   const supabase = await createClient();
-  const { minimo, necesitan, debajo } = await cargarReporte1099(supabase, anio);
+  const { minimo, empresa, detalle, todos, necesitan, debajo } = await cargarReporte1099(supabase, anio);
   const conFaltantes = necesitan.filter((f) => f.faltan.length > 0).length;
   const total = necesitan.reduce((t, f) => t + f.total, 0);
 
@@ -60,6 +61,8 @@ export default async function Reporte1099Page({ searchParams }: PageProps<"/subs
           )}
         </p>
 
+        <DatosEmpresa empresa={empresa} />
+
         <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
           <h2 className="pb-2 font-semibold">Necesitan 1099-NEC</h2>
           {necesitan.length === 0 && (
@@ -70,7 +73,9 @@ export default async function Reporte1099Page({ searchParams }: PageProps<"/subs
           ))}
         </section>
 
-        {necesitan.length > 0 && <ExportarContador anio={anio} filas={necesitan} />}
+        {todos.length > 0 && (
+          <ExportarContador anio={anio} minimo={minimo} empresa={empresa} necesitan={necesitan} todos={todos} detalle={detalle} />
+        )}
 
         {debajo.length > 0 && (
           <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">

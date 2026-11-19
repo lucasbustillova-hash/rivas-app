@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
-import { MINIMO_1099, anioActual, dinero, tinOculto, type Sub, type SubPrivado } from "@/lib/subs";
+import { MINIMO_1099, anioActual, dinero, lineasDireccion, tinOculto, type Sub, type SubPrivado } from "@/lib/subs";
 import { textoDias } from "@/lib/mano-de-obra";
 import { MostrarTin } from "../mostrar-tin";
 import { SubirW9 } from "../subir-w9";
@@ -163,7 +163,7 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
               </a>
             )}
           </Dato>
-          <Dato nombre="Dirección">{sub.direccion}</Dato>
+          <Dato nombre="Dirección">{lineasDireccion(sub).join("\n")}</Dato>
           <Dato nombre="Notas">{sub.notas}</Dato>
         </section>
 
