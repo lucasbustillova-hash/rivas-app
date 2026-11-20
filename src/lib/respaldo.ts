@@ -23,6 +23,7 @@ export const TABLAS = [
   "pagos_sub",
   "gastos",
   "agenda",
+  "tareas",
 ] as const;
 
 export const MINIMO_CONTRASENA = 10;

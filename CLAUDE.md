@@ -125,4 +125,5 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-19 — Resumen del año para el contador (cobrado, pagado a subs y gastos por proyecto, con planilla para Excel). Se cuenta por la fecha de cada pago, como el banco. La planilla no lleva contraseña porque no trae SSN/EIN.
 - 2026-11-20 — Cuentas pendientes: el saldo de un contrato con un sub cuenta como deuda recién cuando la obra está Terminada. Mientras tanto se muestra aparte, en "Contratos en curso", y no suma a lo que se debe ya.
 - 2026-11-20 — Revisión de permisos: un usuario común podía borrar obras y subs desde la base; ahora solo los administradores. Se comprobó simulando un usuario común, un administrador sin verificación en dos pasos y uno verificado.
+- 2026-11-20 — Lista de tareas ("Pendientes de la obra") en cada obra. No tiene montos: la ven, agregan, tachan y borran todos los usuarios verificados.
 - 2026-11-18 — En los PR se escribe `Closes #número` (en inglés): con "Cierra" GitHub no cierra el issue.
