@@ -233,7 +233,11 @@ export async function registrarPagoSub(asignacionId: string, _prev: EstadoPago, 
     .insert({ asignacion_id: asignacionId, monto, fecha, metodo, nota, es_adelanto: esAdelanto });
   if (error) return { error: "No se pudo guardar el pago. Probá de nuevo." };
   refrescar(asignacion.proyecto_id);
-  return { error: null, listo: Date.now() };
+  return {
+    error: null,
+    listo: Date.now(),
+    enlace: { href: `/proyectos/${asignacion.proyecto_id}/mano-de-obra/${asignacionId}/cuenta`, texto: "Ver estado de cuenta" },
+  };
 }
 
 export async function borrarPagoSub(id: string): Promise<{ error?: string }> {

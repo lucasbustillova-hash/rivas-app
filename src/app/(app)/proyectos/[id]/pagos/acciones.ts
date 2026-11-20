@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { METODOS, PLANES, cuotasDelPlan, dinero, leerMonto, type Plan } from "@/lib/cobros";
+import type { EstadoPago } from "@/components/formulario-pago";
 
 export type EstadoFormulario = { error: string | null };
 
@@ -63,9 +64,9 @@ export async function guardarContrato(
 // Anota un pago recibido del cliente.
 export async function registrarPago(
   proyectoId: string,
-  _prev: EstadoFormulario & { listo?: number },
+  _prev: EstadoPago,
   formData: FormData,
-): Promise<EstadoFormulario & { listo?: number }> {
+): Promise<EstadoPago> {
   if (!UUID.test(proyectoId) || !(await esAdmin())) return { error: "Solo los administradores pueden anotar pagos." };
 
   const monto = leerMonto(String(formData.get("monto") ?? ""));
@@ -77,11 +78,15 @@ export async function registrarPago(
   const nota = String(formData.get("nota") ?? "").trim().slice(0, 500) || null;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("pagos_cliente").insert({ proyecto_id: proyectoId, monto, fecha, metodo, nota });
-  if (error) return { error: "No se pudo guardar el pago. Probá de nuevo." };
+  const { data, error } = await supabase
+    .from("pagos_cliente")
+    .insert({ proyecto_id: proyectoId, monto, fecha, metodo, nota })
+    .select("id")
+    .single();
+  if (error || !data) return { error: "No se pudo guardar el pago. Probá de nuevo." };
 
   revalidatePath(`/proyectos/${proyectoId}`, "layout");
-  return { error: null, listo: Date.now() };
+  return { error: null, listo: Date.now(), enlace: { href: `/proyectos/${proyectoId}/pagos/recibo/${data.id}`, texto: "Ver recibo" } };
 }
 
 // Borra un pago anotado por error.
