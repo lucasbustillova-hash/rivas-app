@@ -13,6 +13,7 @@ import { cargarManoDeObra } from "./mano-de-obra/datos";
 import { TablaManoDeObra } from "./mano-de-obra/tabla";
 import { cargarGastos } from "./gastos/datos";
 import { TarjetaGanancia } from "./gastos/tarjeta-ganancia";
+import { ListaTareas } from "./lista-tareas";
 import { resumenGanancia } from "@/lib/gastos";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
@@ -36,6 +37,11 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
     .limit(6);
   const recientes = (ultimos ?? []) as ArchivoProyecto[];
   const enlaces = await enlacesMini(supabase, recientes);
+  const { data: tareas } = await supabase
+    .from("tareas")
+    .select("id, texto, hecha")
+    .eq("proyecto_id", id)
+    .order("creado_en");
 
   // Pagos del cliente: solo los administradores.
   const admin = await esAdmin();
@@ -74,6 +80,8 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
           <Dato nombre="Alcance">{proyecto.alcance}</Dato>
           <Dato nombre="Notas">{proyecto.notas}</Dato>
         </section>
+
+        <ListaTareas proyectoId={proyecto.id} tareas={tareas ?? []} />
 
         {cobro && (
           <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
