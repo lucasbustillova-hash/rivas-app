@@ -8,8 +8,8 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 
 - **Proyectos:** lista con filtro por estado y ficha de cada proyecto con los datos del cliente.
 - **Fotos y videos de obra:** se sacan desde el iPhone con etapa (antes / durante / después), fecha y nota, y se ven en línea de tiempo.
-- **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso. Cada pago tiene su recibo (en español e inglés) para imprimir o mandar como PDF.
-- **Subcontratistas:** ficha con contacto y datos para la 1099. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
+- **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso. Cada pago tiene su recibo (en español e inglés) para imprimir o mandar como PDF; aparece "Ver recibo" apenas se anota el pago.
+- **Subcontratistas:** ficha con contacto, datos para la 1099 y lo que se le debe ya en todas las obras. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
 - **Mano de obra:** subs por día (los días se marcan en un calendario, con medios días) o por contrato (adelantos y pago final). Muestra cuánto se le debe a cada uno, y cada sub tiene un estado de cuenta (en español e inglés) para imprimir o mandar como PDF.
 - **Gastos y ganancia:** en cada proyecto se anotan los gastos (materiales, herramientas o alquiler, permisos, dumpster…) con foto del recibo opcional. La ficha muestra la ganancia (contrato − mano de obra − gastos) y la plata en mano hoy (cobrado − pagado a subs − gastos).
 - **Calendario:** la semana con qué sub va a qué obra cada día. Se programan uno o varios subs por rango de fechas (sin domingos si se quiere) y avisa si alguien quedó en dos obras el mismo día. Lo ven todos; los administradores marcan desde ahí los días trabajados, que pasan a la cuenta del sub.
@@ -17,7 +17,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Buscador:** arriba de la lista de proyectos se busca por cliente, nombre de la obra, dirección, tipo de trabajo o teléfono. No importan los acentos ni las mayúsculas, y se combina con el filtro por estado.
 - **Cuentas pendientes:** todas las obras juntas: cuánto se le debe ya a cada sub (con el detalle por obra; los contratos de obras sin terminar van aparte) y cuánto le falta pagar a cada cliente, con su próximo cobro. Los dos totales se ven arriba de la lista de proyectos (solo administradores).
 - **Resumen del año:** lo cobrado, lo pagado a subs y los gastos del año, por proyecto, con una planilla para Excel para el contador. Se entra desde el final de la lista de proyectos (solo administradores).
-- **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
+- **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno. También muestra cuánto espacio se usó del plan gratis de Supabase (fotos y datos) y avisa desde el 80 %.
 
 Montos, pagos y datos de impuestos los ven **solo los administradores**.
 
