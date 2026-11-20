@@ -22,6 +22,7 @@ export const TABLAS = [
   "dias_trabajados",
   "pagos_sub",
   "gastos",
+  "agenda",
 ] as const;
 
 export const MINIMO_CONTRASENA = 10;
@@ -58,7 +59,7 @@ const LEEME = (fecha: string) => `RESPALDO DE NAHOMY PRO
 Creado: ${fecha}
 
 Este archivo tiene una copia completa de la app:
-- datos/: cada tabla de la base de datos en formato JSON (proyectos, clientes, pagos, subcontratistas, días, gastos, etc.).
+- datos/: cada tabla de la base de datos en formato JSON (proyectos, clientes, pagos, subcontratistas, días, gastos, calendario, etc.).
   En subcontratistas_privado.json, el campo "tin" tiene el SSN o EIN completo, para poder recuperarlo
   aunque se pierda la clave de encriptación de Supabase.
 - archivos/obras/: fotos y videos de los proyectos.
