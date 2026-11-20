@@ -3,24 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Barra de abajo: Proyectos / Calendario / Subcontratistas.
-export function Navegacion() {
+// Proyectos / Calendario / Subcontratistas. En el celular es la barra de abajo;
+// en la compu (pantalla ancha) va arriba, en el encabezado.
+export function Navegacion({ arriba = false }: { arriba?: boolean }) {
   const ruta = usePathname();
   const enSubs = ruta.startsWith("/subs");
   const enCalendario = ruta.startsWith("/calendario");
   const enProyectos = !enSubs && !enCalendario;
 
   const item = (activo: boolean) =>
-    `flex min-h-11 flex-col items-center justify-center gap-1 text-xs ${
-      activo ? "font-semibold text-obra" : "text-texto-suave"
-    }`;
+    arriba
+      ? `flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm ${
+          activo ? "bg-tinta-suave font-semibold text-white" : "text-stone-300 hover:text-white"
+        }`
+      : `flex min-h-11 flex-col items-center justify-center gap-1 text-xs ${
+          activo ? "font-semibold text-obra" : "text-texto-suave"
+        }`;
 
   return (
     <nav
       aria-label="Secciones"
-      className="fixed inset-x-0 bottom-0 z-10 print:hidden border-t border-borde bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className={
+        arriba
+          ? "hidden md:block"
+          : "fixed inset-x-0 bottom-0 z-10 border-t border-borde bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden print:hidden"
+      }
     >
-      <div className="mx-auto grid max-w-3xl grid-cols-3">
+      <div className={arriba ? "flex gap-1" : "mx-auto grid max-w-3xl grid-cols-3"}>
         <Link href="/" className={item(enProyectos)} aria-current={enProyectos ? "page" : undefined}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
             <path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6" />

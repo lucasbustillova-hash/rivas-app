@@ -25,7 +25,7 @@ export default async function ResumenAnualPage({ searchParams }: PageProps<"/res
   return (
     <main className="flex flex-1 flex-col">
       <Encabezado volver="/" volverTexto="Proyectos" titulo="Resumen del año" subtitulo={`Lo que entró y salió en ${anio}`} />
-      <nav aria-label="Elegir el año" className="flex gap-2 bg-tinta px-5 pb-4">
+      <nav aria-label="Elegir el año" className="franja flex gap-2 px-5 pb-4">
         {anios.map((a) => (
           <Link
             key={a}

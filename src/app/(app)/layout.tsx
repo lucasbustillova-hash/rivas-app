@@ -17,6 +17,9 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           <Link href="/" aria-label="Inicio">
             <Logo className="w-36" priority />
           </Link>
+          <Suspense fallback={null}>
+            <Navegacion arriba />
+          </Suspense>
           <div className="flex items-center gap-1">
             <Suspense fallback={null}>
               <EnlaceRespaldo />
@@ -25,8 +28,8 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           </div>
         </div>
       </header>
-      {/* pb deja lugar para la barra de abajo. */}
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col pb-24 print:pb-0">
+      {/* pb deja lugar para la barra de abajo (en la compu va arriba). */}
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col pb-24 md:pb-10 print:pb-0">
         {/* La sesión se lee al momento del pedido, por eso va dentro de Suspense. */}
         <Suspense fallback={<p className="px-5 py-6 text-texto-suave">Cargando…</p>}>
           <SoloConSesion>{children}</SoloConSesion>

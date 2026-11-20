@@ -25,7 +25,7 @@ export default async function Reporte1099Page({ searchParams }: PageProps<"/subs
   return (
     <main className="flex flex-1 flex-col">
       <Encabezado volver="/subs" volverTexto="Subcontratistas" titulo="Reporte 1099" subtitulo={`Pagos a subcontratistas en ${anio}`} />
-      <nav aria-label="Elegir el año" className="flex gap-2 bg-tinta px-5 pb-4">
+      <nav aria-label="Elegir el año" className="franja flex gap-2 px-5 pb-4">
         {anios.map((a) => (
           <Link
             key={a}
