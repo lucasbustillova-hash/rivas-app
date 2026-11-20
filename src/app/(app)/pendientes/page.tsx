@@ -11,7 +11,7 @@ import { cargarPendientes } from "./datos";
 export default async function PendientesPage() {
   if (!(await esAdmin())) notFound();
   const supabase = await createClient();
-  const { subs, clientes, debemos, nosDeben } = await cargarPendientes(supabase);
+  const { subs, enCurso, enCursoTotal, clientes, debemos, nosDeben } = await cargarPendientes(supabase);
 
   return (
     <main className="flex flex-1 flex-col">
@@ -20,7 +20,7 @@ export default async function PendientesPage() {
       <div className="flex flex-col gap-3 px-4 py-4">
         <section className="grid grid-cols-2 gap-2 tabular-nums">
           <a href="#subs" className="flex flex-col gap-0.5 rounded-2xl bg-white p-3.5 shadow-sm active:bg-stone-50">
-            <span className="text-xs text-texto-suave">Debemos a subs</span>
+            <span className="text-xs text-texto-suave">Debemos ya a subs</span>
             <span className={`text-lg font-bold ${debemos > 0 ? "text-orange-700" : "text-green-800"}`}>{dinero(debemos)}</span>
           </a>
           <a href="#clientes" className="flex flex-col gap-0.5 rounded-2xl bg-white p-3.5 shadow-sm active:bg-stone-50">
@@ -30,9 +30,10 @@ export default async function PendientesPage() {
         </section>
 
         <section id="subs" className="flex scroll-mt-4 flex-col rounded-2xl bg-white p-4 shadow-sm">
-          <h2 className="font-semibold">A quién le debemos</h2>
+          <h2 className="font-semibold">A quién le debemos ya</h2>
           <p className="pb-1 text-xs text-texto-suave">
-            Por día: días trabajados × tarifa, menos lo pagado. Por contrato: lo que falta pagar del contrato.
+            Por día: días trabajados × tarifa, menos lo pagado. Por contrato: lo que falta pagar, cuando la obra ya está
+            terminada.
           </p>
           {subs.length === 0 && <p className="border-t border-stone-100 pt-2 text-sm text-green-800">Estamos al día con todos los subs.</p>}
           {subs.map((s) => (
@@ -63,6 +64,35 @@ export default async function PendientesPage() {
             </div>
           ))}
         </section>
+
+        {enCurso.length > 0 && (
+          <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="font-semibold">Contratos en curso</h2>
+              <span className="text-sm text-texto-suave tabular-nums">{dinero(enCursoTotal)}</span>
+            </div>
+            <p className="pb-1 text-xs text-texto-suave">
+              Lo que falta pagar de contratos en obras que no están terminadas. No suma arriba: se paga al terminar el trabajo.
+            </p>
+            {enCurso.map((c) => (
+              <Link
+                key={c.asignacionId}
+                href={`/proyectos/${c.proyectoId}/mano-de-obra/${c.asignacionId}`}
+                className="flex justify-between gap-3 border-t border-stone-100 py-2.5 text-sm tabular-nums active:bg-stone-50"
+              >
+                <span className="min-w-0">
+                  <span className="block truncate font-medium">{c.sub}</span>
+                  <span className="block truncate text-xs text-texto-suave">
+                    {c.proyecto} · pagó {dinero(c.pagado)} de {dinero(c.monto)}
+                  </span>
+                </span>
+                <span className="shrink-0 text-texto-suave">
+                  {c.falta < 0 ? `pagado de más ${dinero(-c.falta)}` : `faltan ${dinero(c.falta)}`}
+                </span>
+              </Link>
+            ))}
+          </section>
+        )}
 
         <section id="clientes" className="flex scroll-mt-4 flex-col rounded-2xl bg-white p-4 shadow-sm">
           <h2 className="font-semibold">Quién nos debe</h2>

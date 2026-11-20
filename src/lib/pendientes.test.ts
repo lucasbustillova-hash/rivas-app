@@ -22,7 +22,7 @@ describe("cuentasPendientes: subs", () => {
       asignaciones: [
         porDia("1", juan, obraA, [1, 1, 0.5], [200]), // 500 − 200 = 300
         porDia("2", juan, obraB, [1], []), // 200
-        { id: "3", modalidad: "contrato", monto_contrato: 3000, sub: pedro, proyecto: obraA, dias: [], pagos: [{ monto: 1000 }] }, // 2000
+        { id: "3", modalidad: "contrato", monto_contrato: 3000, sub: pedro, proyecto: obraB, dias: [], pagos: [{ monto: 1000 }] }, // 2000, obra terminada
       ],
       contratos: [],
     });
@@ -35,6 +35,31 @@ describe("cuentasPendientes: subs", () => {
       ["Baño", 200],
     ]);
     expect(r.debemos).toBe(2500);
+  });
+
+  it("un contrato de una obra sin terminar va aparte y no suma a lo que debemos ya", () => {
+    const r = cuentasPendientes({
+      asignaciones: [
+        { id: "3", modalidad: "contrato", monto_contrato: 3200, sub: pedro, proyecto: obraA, dias: [], pagos: [{ monto: 1000 }] },
+        porDia("1", pedro, obraA, [1], []), // 200, por día sí cuenta ya
+      ],
+      contratos: [],
+    });
+    expect(r.debemos).toBe(200);
+    expect(r.subs.map((s) => [s.nombre, s.total])).toEqual([["Pedro", 200]]);
+    expect(r.enCurso).toEqual([
+      { asignacionId: "3", proyectoId: "a", proyecto: "Cocina", sub: "Pedro", monto: 3200, pagado: 1000, falta: 2200 },
+    ]);
+    expect(r.enCursoTotal).toBe(2200);
+  });
+
+  it("un contrato en curso ya pagado entero no aparece", () => {
+    const r = cuentasPendientes({
+      asignaciones: [{ id: "3", modalidad: "contrato", monto_contrato: 3200, sub: pedro, proyecto: obraA, dias: [], pagos: [{ monto: 3200 }] }],
+      contratos: [],
+    });
+    expect(r.enCurso).toEqual([]);
+    expect(r.enCursoTotal).toBe(0);
   });
 
   it("deja afuera a los que están al día", () => {
