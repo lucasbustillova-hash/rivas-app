@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
+import { hoyEnFlorida } from "@/lib/agenda";
 import { METODOS, leerMonto } from "@/lib/cobros";
 import type { EstadoPago } from "@/components/formulario-pago";
 
@@ -181,6 +182,8 @@ export async function agregarDias(
   if (dias.some((d) => !FECHA.test(d.fecha) || (d.fraccion !== 1 && d.fraccion !== 0.5))) {
     return { error: "Hay un día no válido." };
   }
+  // Un día cuenta para el pago recién cuando pasó.
+  if (dias.some((d) => d.fecha > hoyEnFlorida())) return { error: "Hay un día que todavía no llegó." };
   const supabase = await createClient();
   const { data: asignacion } = await supabase
     .from("asignaciones")

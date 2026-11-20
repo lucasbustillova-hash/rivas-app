@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { choques, diasDeLaSemana, fechaValida, lunesDe, rangoDeDias, tituloDia, tituloSemana } from "@/lib/agenda";
+import { choques, diasDeLaSemana, diasSeguidos, fechaValida, lunesDe, rangoDeDias, tituloDia, tituloSemana } from "@/lib/agenda";
 
 describe("semanas del calendario", () => {
   it("la semana empieza el lunes", () => {
@@ -68,5 +68,27 @@ describe("sub en dos obras el mismo día", () => {
       { fecha: "2026-11-20", subcontratista_id: "pedro", proyecto_id: "cocina" },
     ]);
     expect([...r]).toEqual(["2026-11-20|juan"]);
+  });
+});
+
+describe("diasSeguidos", () => {
+  it("cuenta los días a partir de una fecha, salteando domingos", () => {
+    // 2026-11-19 es jueves: jue, vie, sáb, (dom no), lun
+    expect(diasSeguidos("2026-11-19", 4, true)).toEqual(["2026-11-19", "2026-11-20", "2026-11-21", "2026-11-23"]);
+  });
+
+  it("sin saltear domingos los cuenta todos", () => {
+    expect(diasSeguidos("2026-11-21", 3, false)).toEqual(["2026-11-21", "2026-11-22", "2026-11-23"]);
+  });
+
+  it("si empieza un domingo y se saltean, arranca el lunes", () => {
+    expect(diasSeguidos("2026-11-22", 1, true)).toEqual(["2026-11-23"]);
+  });
+
+  it("rechaza cantidades o fechas no válidas", () => {
+    expect(diasSeguidos("2026-11-19", 0, true)).toBeNull();
+    expect(diasSeguidos("2026-11-19", 2.5, true)).toBeNull();
+    expect(diasSeguidos("2026-11-19", 100, true)).toBeNull();
+    expect(diasSeguidos("2026-02-30", 3, true)).toBeNull();
   });
 });
