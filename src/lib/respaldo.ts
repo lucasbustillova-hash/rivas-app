@@ -21,6 +21,7 @@ export const TABLAS = [
   "asignaciones",
   "dias_trabajados",
   "pagos_sub",
+  "gastos",
 ] as const;
 
 export const MINIMO_CONTRASENA = 10;
@@ -57,11 +58,11 @@ const LEEME = (fecha: string) => `RESPALDO DE NAHOMY PRO
 Creado: ${fecha}
 
 Este archivo tiene una copia completa de la app:
-- datos/: cada tabla de la base de datos en formato JSON (proyectos, clientes, pagos, subcontratistas, días, etc.).
+- datos/: cada tabla de la base de datos en formato JSON (proyectos, clientes, pagos, subcontratistas, días, gastos, etc.).
   En subcontratistas_privado.json, el campo "tin" tiene el SSN o EIN completo, para poder recuperarlo
   aunque se pierda la clave de encriptación de Supabase.
 - archivos/obras/: fotos y videos de los proyectos.
-- archivos/documentos/: W-9 y acuerdos firmados.
+- archivos/documentos/: W-9, acuerdos firmados y recibos de gastos.
 - resumen.json: cuántas filas y archivos tiene, para comprobar que está completo.
 
 Está protegido con contraseña (AES-256). Para abrirlo en la computadora sirve 7-Zip (Windows)
@@ -111,6 +112,7 @@ export async function armarRespaldo(
   }
   for (const p of datos.subcontratistas_privado) if (p.w9_ruta) lista.push({ carpeta: "documentos", ruta: String(p.w9_ruta) });
   for (const a of datos.asignaciones) if (a.contrato_ruta) lista.push({ carpeta: "documentos", ruta: String(a.contrato_ruta) });
+  for (const g of datos.gastos) if (g.recibo_ruta) lista.push({ carpeta: "documentos", ruta: String(g.recibo_ruta) });
 
   for (const [i, f] of lista.entries()) {
     avisar({ paso: "Copiando fotos y documentos", hechos: i, total: lista.length });

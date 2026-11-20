@@ -11,6 +11,9 @@ import { BarraCobro } from "./pagos/barra-cobro";
 import { cargarCobro } from "./pagos/datos";
 import { cargarManoDeObra } from "./mano-de-obra/datos";
 import { TablaManoDeObra } from "./mano-de-obra/tabla";
+import { cargarGastos } from "./gastos/datos";
+import { TarjetaGanancia } from "./gastos/tarjeta-ganancia";
+import { resumenGanancia } from "@/lib/gastos";
 
 // Ficha del proyecto con los datos del cliente (pantalla 2 de los bocetos).
 export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id]">) {
@@ -36,9 +39,13 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
 
   // Pagos del cliente: solo los administradores.
   const admin = await esAdmin();
-  const [cobro, manoDeObra] = admin
-    ? await Promise.all([cargarCobro(supabase, id), cargarManoDeObra(supabase, id)])
-    : [null, null];
+  const [cobro, manoDeObra, gastos] = admin
+    ? await Promise.all([cargarCobro(supabase, id), cargarManoDeObra(supabase, id), cargarGastos(supabase, id)])
+    : [null, null, null];
+  const contrato = cobro?.contrato ? Number(cobro.contrato.monto_total) : null;
+  const cobrado = cobro?.resumen?.pagado ?? 0;
+  const ganancia =
+    manoDeObra && gastos ? resumenGanancia({ contrato, cobrado, manoDeObra: manoDeObra.totales, gastos }) : null;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -100,6 +107,26 @@ export default async function ProyectoPage({ params }: PageProps<"/proyectos/[id
               </Link>
             </div>
             <TablaManoDeObra filas={manoDeObra.filas} totales={manoDeObra.totales} />
+          </section>
+        )}
+
+        {ganancia && manoDeObra && (
+          <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-baseline justify-between gap-2">
+              <h2 className="font-semibold">Gastos y ganancia</h2>
+              <Link href={`/proyectos/${proyecto.id}/gastos`} className="text-sm font-semibold text-obra">
+                + Anotar gasto
+              </Link>
+            </div>
+            <TarjetaGanancia
+              contrato={contrato}
+              cobrado={cobrado}
+              pagadoSubs={manoDeObra.totales.pagado}
+              resumen={ganancia}
+            />
+            <Link href={`/proyectos/${proyecto.id}/gastos`} className="text-sm font-semibold text-obra">
+              Ver gastos ({gastos?.length ?? 0}) ›
+            </Link>
           </section>
         )}
 
