@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { MINIMO_1099, anioActual, dinero, iniciales, type SubPrivado } from "@/lib/subs";
+import { cargarPendientes } from "../pendientes/datos";
 
 // Lista de subcontratistas con búsqueda (pantalla 5 de los bocetos).
 export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
@@ -17,7 +18,7 @@ export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
   if (busqueda) consulta = consulta.or(`nombre.ilike.%${busqueda}%,oficio.ilike.%${busqueda}%`);
 
   // Lo que solo ve un administrador: tarifa, W-9 y lo pagado en el año.
-  const [{ data: subs, error }, privados, pagos] = await Promise.all([
+  const [{ data: subs, error }, privados, pagos, cuentas] = await Promise.all([
     consulta,
     admin
       ? supabase.from("subcontratistas_privado").select("subcontratista_id, tarifa_diaria, w9_firmado")
@@ -29,7 +30,10 @@ export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
           .gte("fecha", `${anio}-01-01`)
           .lte("fecha", `${anio}-12-31`)
       : Promise.resolve({ data: [] }),
+    admin ? cargarPendientes(supabase).catch(() => null) : Promise.resolve(null),
   ]);
+  // Lo que se le debe ya a cada sub (la misma cuenta que Cuentas pendientes).
+  const debeDe = new Map((cuentas?.subs ?? []).map((s) => [s.id, s.total]));
 
   const privadoDe = new Map(
     (privados.data ?? []).map((p) => [p.subcontratista_id as string, p as Pick<SubPrivado, "tarifa_diaria" | "w9_firmado">]),
@@ -130,6 +134,9 @@ export default async function SubsPage({ searchParams }: PageProps<"/subs">) {
                   {detalle || "Sin oficio"}
                   {s.activo ? "" : " · Inactivo"}
                 </span>
+                {(debeDe.get(s.id) ?? 0) > 0 && (
+                  <span className="text-xs font-semibold text-orange-700 tabular-nums">Se le debe {dinero(debeDe.get(s.id)!)}</span>
+                )}
               </span>
               {admin && (
                 <span className="flex shrink-0 flex-col items-end gap-1 tabular-nums">
