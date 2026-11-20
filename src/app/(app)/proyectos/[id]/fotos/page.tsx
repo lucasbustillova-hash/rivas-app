@@ -39,7 +39,7 @@ export default async function FotosPage({ params, searchParams }: PageProps<"/pr
   return (
     <main className="flex flex-1 flex-col">
       <Encabezado volver={`/proyectos/${id}`} volverTexto={proyecto.nombre} titulo="Fotos y videos" />
-      <nav aria-label="Filtrar por etapa" className="flex gap-2 overflow-x-auto bg-tinta px-5 pb-4">
+      <nav aria-label="Filtrar por etapa" className="franja flex gap-2 overflow-x-auto px-5 pb-4">
         {filtros.map((f) => {
           const activo = f.valor === filtro;
           return (

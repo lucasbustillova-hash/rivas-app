@@ -34,7 +34,7 @@ export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
 
   return (
     <main className="flex flex-1 flex-col">
-      <div className="flex flex-col gap-4 bg-tinta px-5 pb-4 text-white">
+      <div className="franja flex flex-col gap-4 px-5 pb-4 text-white">
         <div className="flex items-center justify-between gap-4">
           <h1 className="font-titulo text-3xl font-bold">Proyectos</h1>
           <Link
