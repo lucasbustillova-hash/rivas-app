@@ -8,7 +8,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 
 - **Proyectos:** lista con filtro por estado y ficha de cada proyecto con los datos del cliente.
 - **Fotos y videos de obra:** se sacan desde el iPhone con etapa (antes / durante / después), fecha y nota, y se ven en línea de tiempo.
-- **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso.
+- **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso. Cada pago tiene su recibo (en español e inglés) para imprimir o mandar como PDF.
 - **Subcontratistas:** ficha con contacto y datos para la 1099. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
 - **Mano de obra:** subs por día (los días se marcan en un calendario, con medios días) o por contrato (adelantos y pago final). Muestra cuánto se le debe a cada uno.
 - **Gastos y ganancia:** en cada proyecto se anotan los gastos (materiales, herramientas o alquiler, permisos, dumpster…) con foto del recibo opcional. La ficha muestra la ganancia (contrato − mano de obra − gastos) y la plata en mano hoy (cobrado − pagado a subs − gastos).

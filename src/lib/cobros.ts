@@ -94,3 +94,28 @@ export function resumenCobro(contrato: Pick<Contrato, "monto_total">, cuotas: Cu
   const proxima = estados.find((c) => c.estado !== "pagada") ?? null;
   return { total, pagado, falta, deMas, porcentaje, estados, proxima };
 }
+
+// Para el recibo: cuánto llevaba pagado el cliente con ese pago incluido y cuánto le quedaba.
+// Los pagos cuentan en orden de fecha (y, el mismo día, en el orden en que se anotaron).
+export function saldoAlPago(
+  total: number,
+  pagos: { id: string; fecha: string; creado_en: string; monto: number }[],
+  pagoId: string,
+) {
+  const orden = [...pagos].sort((a, b) => a.fecha.localeCompare(b.fecha) || a.creado_en.localeCompare(b.creado_en));
+  const hasta = orden.findIndex((p) => p.id === pagoId);
+  if (hasta === -1) return null;
+  const pagado = Math.round(orden.slice(0, hasta + 1).reduce((t, p) => t + Number(p.monto), 0) * 100) / 100;
+  return { pagado, saldo: Math.max(0, Math.round((Number(total) - pagado) * 100) / 100) };
+}
+
+// Forma de pago en español e inglés, para el recibo.
+export function metodoBilingue(valor: string) {
+  const ingles: Record<string, string> = { efectivo: "Cash", zelle: "Zelle", cheque: "Check", tarjeta: "Card", otro: "Other" };
+  const es = valor === "tarjeta" ? "Tarjeta" : nombreMetodo(valor);
+  const en = ingles[valor];
+  return en && en !== es ? `${es} / ${en}` : es;
+}
+
+// Número corto del recibo, sacado del pago: "R-1A2B3C4D".
+export const numeroRecibo = (pagoId: string) => `R-${pagoId.replace(/-/g, "").slice(0, 8).toUpperCase()}`;
