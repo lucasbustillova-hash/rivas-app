@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { dinero } from "@/lib/cobros";
 import { textoDias } from "@/lib/mano-de-obra";
+import { diasSeguidos, tituloDia } from "@/lib/agenda";
+import { campo, etiqueta } from "@/lib/estilos";
 import { agregarDias } from "./acciones";
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -33,6 +35,7 @@ export function CalendarioDias({
   const [marcados, setMarcados] = useState<Map<string, number>>(new Map());
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [varios, setVarios] = useState(false);
 
   const yaCargados = new Map(registrados.map((r) => [r.fecha, Number(r.fraccion)]));
   const primerDia = new Date(mes.anio, mes.mes, 1).getDay();
@@ -75,6 +78,38 @@ export function CalendarioDias({
     }
     setMarcados(new Map());
     router.refresh();
+  };
+
+  // "Poner la cantidad de días": marca en el calendario N días seguidos desde una fecha.
+  // Quedan en naranja (sin guardar) para revisarlos antes de tocar Guardar.
+  const marcarVarios = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const datos = new FormData(e.currentTarget);
+    const desde = String(datos.get("desde") ?? "");
+    const cantidad = Number(datos.get("cantidad"));
+    const fraccion = datos.get("fraccion") === "0.5" ? 0.5 : 1;
+    const fechas = diasSeguidos(desde, cantidad, datos.get("sin_domingos") === "si");
+    if (!fechas) {
+      setError("Revisá la fecha y la cantidad de días (de 1 a 62).");
+      return;
+    }
+    const ultimo = fechas[fechas.length - 1];
+    if (ultimo > hoyClave) {
+      setError(`Con esa cantidad llega hasta el ${tituloDia(ultimo).toLowerCase()}, que todavía no pasó.`);
+      return;
+    }
+    setError(null);
+    setMarcados((actual) => {
+      const nuevo = new Map(actual);
+      for (const f of fechas) {
+        if (yaCargados.get(f) === fraccion) nuevo.delete(f);
+        else nuevo.set(f, fraccion);
+      }
+      return nuevo;
+    });
+    const [a, m] = desde.split("-").map(Number);
+    setMes({ anio: a, mes: m - 1 });
+    setVarios(false);
   };
 
   const moverMes = (delta: number) =>
@@ -139,6 +174,61 @@ export function CalendarioDias({
       <p className="text-xs text-texto-suave">
         Un toque: día completo · dos toques: medio día · tres: se quita. Negro = ya cargado; naranja = nuevo.
       </p>
+
+      {varios ? (
+        <form onSubmit={marcarVarios} className="flex flex-col gap-3 rounded-xl border border-borde p-3">
+          <h3 className="text-sm font-semibold">Poner la cantidad de días</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <label className={etiqueta}>
+              Desde
+              <input type="date" name="desde" required defaultValue={hoyClave} max={hoyClave} className={campo} />
+            </label>
+            <label className={etiqueta}>
+              Cuántos días
+              <input type="number" name="cantidad" required min={1} max={62} step={1} inputMode="numeric" defaultValue={5} className={campo} />
+            </label>
+          </div>
+          <fieldset className="grid grid-cols-2 gap-2">
+            <legend className="sr-only">Cada día es</legend>
+            {[
+              { valor: "1", nombre: "Días completos" },
+              { valor: "0.5", nombre: "Medios días" },
+            ].map((o) => (
+              <label
+                key={o.valor}
+                className="flex h-11 cursor-pointer items-center justify-center rounded-xl border border-borde text-sm font-semibold has-checked:border-tinta has-checked:bg-tinta has-checked:text-white"
+              >
+                <input type="radio" name="fraccion" value={o.valor} defaultChecked={o.valor === "1"} className="sr-only" />
+                {o.nombre}
+              </label>
+            ))}
+          </fieldset>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="sin_domingos" value="si" defaultChecked className="h-5 w-5 accent-obra" />
+            Saltear domingos
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => setVarios(false)} className="h-11 rounded-xl border border-borde font-semibold">
+              Cancelar
+            </button>
+            <button type="submit" className="h-11 rounded-xl bg-tinta font-semibold text-white">
+              Marcar en el calendario
+            </button>
+          </div>
+          <p className="text-xs text-texto-suave">Quedan marcados en naranja: revisalos y después tocá Guardar.</p>
+        </form>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setError(null);
+            setVarios(true);
+          }}
+          className="h-11 rounded-xl border border-borde text-sm font-semibold"
+        >
+          O poner la cantidad de días
+        </button>
+      )}
 
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
 

@@ -75,3 +75,14 @@ export function choques(entradas: { fecha: string; subcontratista_id: string; pr
   }
   return new Set([...obras].filter(([, p]) => p.size > 1).map(([clave]) => clave));
 }
+
+// "Desde el lunes, 5 días": las fechas seguidas a partir de una, opcionalmente sin domingos.
+// Devuelve null si la fecha no es válida o la cantidad no está entre 1 y MAXIMO_DIAS.
+export function diasSeguidos(desde: string, cantidad: number, sinDomingos: boolean) {
+  if (!fechaValida(desde) || !Number.isInteger(cantidad) || cantidad < 1 || cantidad > MAXIMO_DIAS) return null;
+  const fechas: string[] = [];
+  for (let f = desde; fechas.length < cantidad; f = sumarDias(f, 1)) {
+    if (!sinDomingos || diaDeLaSemana(f) !== 0) fechas.push(f);
+  }
+  return fechas;
+}
