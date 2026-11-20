@@ -84,7 +84,7 @@ Ninguno de los dos revisa código; lo importante es saber qué hizo y qué está
 
 ### Antes de dar algo por terminado
 
-- Verificar que el proyecto arranca y que lo que se cambió funciona (cuando haya tests, correrlos).
+- Verificar que el proyecto arranca y que lo que se cambió funciona. Correr `npm test` (pruebas de las cuentas de plata); si se cambió una cuenta, agregar o ajustar su prueba.
 - Revisar que la vista funcione en pantalla de celular, porque la app se usa en iPhone en obra.
 
 ## Comunicación (Slack: workspace Rivas-app)
