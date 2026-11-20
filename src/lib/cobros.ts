@@ -1,7 +1,7 @@
 // Contrato, plan de pagos y pagos recibidos del cliente.
 
 export type Plan = "50_50" | "40_30_30" | "propio";
-export type Metodo = "efectivo" | "zelle" | "cheque" | "tarjeta" | "otro";
+export type Metodo = "efectivo" | "zelle" | "cheque" | "transferencia" | "tarjeta" | "otro";
 
 export type Contrato = { proyecto_id: string; monto_total: number; plan: Plan };
 export type Cuota = { id: string; orden: number; descripcion: string; monto: number };
@@ -32,6 +32,7 @@ export const METODOS: { valor: Metodo; nombre: string }[] = [
   { valor: "efectivo", nombre: "Efectivo" },
   { valor: "zelle", nombre: "Zelle" },
   { valor: "cheque", nombre: "Cheque" },
+  { valor: "transferencia", nombre: "Transferencia" },
   { valor: "tarjeta", nombre: "Tarjeta (Melio)" },
   { valor: "otro", nombre: "Otro" },
 ];
@@ -111,7 +112,7 @@ export function saldoAlPago(
 
 // Forma de pago en español e inglés, para el recibo.
 export function metodoBilingue(valor: string) {
-  const ingles: Record<string, string> = { efectivo: "Cash", zelle: "Zelle", cheque: "Check", tarjeta: "Card", otro: "Other" };
+  const ingles: Record<string, string> = { efectivo: "Cash", zelle: "Zelle", cheque: "Check", transferencia: "Bank transfer", tarjeta: "Card", otro: "Other" };
   const es = valor === "tarjeta" ? "Tarjeta" : nombreMetodo(valor);
   const en = ingles[valor];
   return en && en !== es ? `${es} / ${en}` : es;
