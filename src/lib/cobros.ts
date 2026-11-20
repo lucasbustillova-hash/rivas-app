@@ -84,7 +84,7 @@ export function estadoCuotas(cuotas: Cuota[], pagado: number): EstadoCuota[] {
     });
 }
 
-export function resumenCobro(contrato: Contrato, cuotas: Cuota[], pagos: PagoCliente[]) {
+export function resumenCobro(contrato: Pick<Contrato, "monto_total">, cuotas: Cuota[], pagos: Pick<PagoCliente, "monto">[]) {
   const total = Number(contrato.monto_total);
   const pagado = Math.round(pagos.reduce((t, p) => t + Number(p.monto), 0) * 100) / 100;
   const falta = Math.max(0, Math.round((total - pagado) * 100) / 100);

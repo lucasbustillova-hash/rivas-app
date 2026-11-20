@@ -14,6 +14,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Gastos y ganancia:** en cada proyecto se anotan los gastos (materiales, herramientas o alquiler, permisos, dumpster…) con foto del recibo opcional. La ficha muestra la ganancia (contrato − mano de obra − gastos) y la plata en mano hoy (cobrado − pagado a subs − gastos).
 - **Calendario:** la semana con qué sub va a qué obra cada día. Se programan uno o varios subs por rango de fechas (sin domingos si se quiere) y avisa si alguien quedó en dos obras el mismo día. Lo ven todos; los administradores marcan desde ahí los días trabajados, que pasan a la cuenta del sub.
 - **Reporte 1099:** a quién hay que hacerle la 1099-NEC en el año, qué datos le faltan y una planilla con contraseña para cualquier contador (resumen por sub y detalle de cada pago). Los datos de la empresa como pagador se cargan ahí una sola vez.
+- **Cuentas pendientes:** todas las obras juntas: cuánto se le debe a cada sub (con el detalle por obra) y cuánto le falta pagar a cada cliente, con su próximo cobro. Los dos totales se ven arriba de la lista de proyectos (solo administradores).
 - **Resumen del año:** lo cobrado, lo pagado a subs y los gastos del año, por proyecto, con una planilla para Excel para el contador. Se entra desde el final de la lista de proyectos (solo administradores).
 - **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
 
@@ -89,7 +90,7 @@ npm run lint
 npm run build
 ```
 
-`npm test` comprueba solo las cuentas de plata: cuotas del cliente, lo que falta cobrar, días × tarifa (con medios días), contratos con adelantos, lo que se le debe a cada sub, la ganancia de cada proyecto, los totales de la 1099 y el resumen del año. Las pruebas están en los archivos `*.test.ts`, al lado del código que prueban. Si se cambia una cuenta, hay que agregar o ajustar su prueba.
+`npm test` comprueba solo las cuentas de plata: cuotas del cliente, lo que falta cobrar, días × tarifa (con medios días), contratos con adelantos, lo que se le debe a cada sub, la ganancia de cada proyecto, los totales de la 1099, el resumen del año y las cuentas pendientes. Las pruebas están en los archivos `*.test.ts`, al lado del código que prueban. Si se cambia una cuenta, hay que agregar o ajustar su prueba.
 
 Las pantallas se siguen probando a mano en la app, en tamaño de celular y con datos inventados.
 
@@ -138,6 +139,7 @@ Para pedirle a Claude un cambio en la base: *"agregá una migración para …"*.
 | `src/app/(app)/proyectos/[id]/` | Ficha del proyecto y sus secciones: `fotos/`, `pagos/` (cliente), `mano-de-obra/` (subs), `gastos/` (gastos y ganancia) |
 | `src/app/(app)/calendario/` | Calendario semanal (las fechas se calculan en `src/lib/agenda.ts`) |
 | `src/app/(app)/subs/` | Subcontratistas; `reporte-1099/` es el reporte y la planilla para el contador |
+| `src/app/(app)/pendientes/` | Cuentas pendientes: lo que se debe a subs y lo que deben los clientes |
 | `src/app/(app)/resumen-anual/` | Resumen del año (cobrado, subs y gastos) y su planilla |
 | `src/app/(app)/respaldo/` | Descargar y comprobar respaldos (el armado está en `src/lib/respaldo.ts`) |
 | `src/lib/` | Textos, cálculos y tipos compartidos (por ejemplo `cobros.ts`, `mano-de-obra.ts`, `gastos.ts`) |
