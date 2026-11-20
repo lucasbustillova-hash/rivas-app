@@ -44,6 +44,19 @@ La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
 - Solo administradores pueden borrar obras y subs (borrar una obra borra también sus pagos, contratos, días y gastos).
 - Respaldos automáticos de la base de datos y de las fotos.
 
+## Entrega de la app
+
+Lucas arma y prueba la app, pero la app y sus datos son de NAHOMY. Cuando Mario y José decidan que la app tiene lo que necesitan, se hace la entrega y solo ellos dos quedan con acceso:
+
+1. Borrar los datos de prueba (la obra y el sub "PRUEBA").
+2. Borrar los usuarios de la app que no son de NAHOMY: el de prueba (`prueba@nahomy.pro`) y el de Lucas.
+3. Supabase: Mario saca a Lucas de la organización.
+4. Netlify: Mario saca a Lucas del equipo, si está.
+5. GitHub: sacar a Lucas de la organización `nahomy-pro` (Mario queda como dueño).
+6. En la compu de Lucas: cerrar la sesión de Supabase y de GitHub que usa Claude.
+
+Los pasos 1 y 2 los puede hacer el Claude de Lucas antes de que pierda el acceso. Los demás los hace Mario desde su cuenta.
+
 ## Tecnología
 
 - **App:** Next.js (React + TypeScript) con Tailwind CSS. Interfaz en español, pensada primero para la pantalla del iPhone.
