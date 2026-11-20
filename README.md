@@ -51,11 +51,11 @@ gh auth setup-git
 
 ### 3. Bajar el proyecto
 
-Pedirle a Claude, en la pestaña Code: *"Cloná github.com/lucasbustillova-hash/rivas-app en una carpeta Proyectos"*. Después abrir esa carpeta en Claude.
+Pedirle a Claude, en la pestaña Code: *"Cloná github.com/nahomy-pro/rivas-app en una carpeta Proyectos"*. Después abrir esa carpeta en Claude.
 
 O a mano:
 ```bash
-git clone https://github.com/lucasbustillova-hash/rivas-app.git
+git clone https://github.com/nahomy-pro/rivas-app.git
 ```
 
 ### 4. Claves de Supabase
