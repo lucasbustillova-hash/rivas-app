@@ -5,6 +5,8 @@ import { Encabezado } from "@/components/encabezado";
 import { ComprobarRespaldo } from "./comprobar-respaldo";
 import { DescargarRespaldo } from "./descargar-respaldo";
 import { diasDesde } from "./ultimo";
+import { EspacioUsado } from "./espacio-usado";
+import { Suspense } from "react";
 
 // Respaldo de toda la app en un archivo con contraseña (solo administradores).
 export default async function RespaldoPage() {
@@ -40,6 +42,9 @@ export default async function RespaldoPage() {
         </div>
         <DescargarRespaldo />
         <ComprobarRespaldo />
+        <Suspense fallback={null}>
+          <EspacioUsado />
+        </Suspense>
       </div>
     </main>
   );
