@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Proyectos / Calendario / Subcontratistas. En el celular es la barra de abajo;
+// Proyectos / Calendario / Pagos (solo administradores) / Subcontratistas. En el celular es la barra de abajo;
 // en la compu (pantalla ancha) va arriba, en el encabezado.
-export function Navegacion({ arriba = false }: { arriba?: boolean }) {
+export function Navegacion({ arriba = false, conPagos = false }: { arriba?: boolean; conPagos?: boolean }) {
   const ruta = usePathname();
   const enSubs = ruta.startsWith("/subs");
   const enCalendario = ruta.startsWith("/calendario");
-  const enProyectos = !enSubs && !enCalendario;
+  const enPagos = ruta.startsWith("/pagos");
+  const enProyectos = !enSubs && !enCalendario && !enPagos;
 
   const item = (activo: boolean) =>
     arriba
@@ -29,7 +30,7 @@ export function Navegacion({ arriba = false }: { arriba?: boolean }) {
           : "fixed inset-x-0 bottom-0 z-10 border-t border-borde bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden print:hidden"
       }
     >
-      <div className={arriba ? "flex gap-1" : "mx-auto grid max-w-3xl grid-cols-3"}>
+      <div className={arriba ? "flex gap-1" : `mx-auto grid max-w-3xl ${conPagos ? "grid-cols-4" : "grid-cols-3"}`}>
         <Link href="/" className={item(enProyectos)} aria-current={enProyectos ? "page" : undefined}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
             <path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6" />
@@ -43,6 +44,16 @@ export function Navegacion({ arriba = false }: { arriba?: boolean }) {
           </svg>
           Calendario
         </Link>
+        {conPagos && (
+          <Link href="/pagos" className={item(enPagos)} aria-current={enPagos ? "page" : undefined}>
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2.5" y="6" width="19" height="12" rx="2" />
+              <circle cx="12" cy="12" r="2.5" />
+              <path d="M6 9.5v5M18 9.5v5" />
+            </svg>
+            Pagos
+          </Link>
+        )}
         <Link href="/subs" className={item(enSubs)} aria-current={enSubs ? "page" : undefined}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="9" cy="8" r="3.5" />
