@@ -47,3 +47,13 @@ export function textoDias(n: number) {
   const numero = `${enteros || (medio ? "" : "0")}${medio ? "½" : ""}`;
   return `${numero} ${n > 0 && n <= 1 ? "día" : "días"}`;
 }
+
+// Para el estado de cuenta: el día en español e inglés.
+export function fraccionBilingue(fraccion: number) {
+  return Number(fraccion) === 0.5 ? "Medio día / Half day" : "Día completo / Full day";
+}
+
+// Días y pagos de la más vieja a la más nueva, como se leen en un estado de cuenta.
+export function enOrden<T extends { fecha: string; creado_en?: string }>(lista: T[]) {
+  return [...lista].sort((a, b) => a.fecha.localeCompare(b.fecha) || (a.creado_en ?? "").localeCompare(b.creado_en ?? ""));
+}

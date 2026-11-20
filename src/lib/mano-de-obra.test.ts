@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resumenAsignacion, textoDias } from "@/lib/mano-de-obra";
+import { enOrden, fraccionBilingue, resumenAsignacion, textoDias } from "@/lib/mano-de-obra";
 
 const porDia = { modalidad: "dia" as const, monto_contrato: null };
 const dia = (fraccion: number, tarifa: number) => ({ fraccion, tarifa });
@@ -53,5 +53,25 @@ describe("texto de los días", () => {
     expect(textoDias(1)).toBe("1 día");
     expect(textoDias(1.5)).toBe("1½ días");
     expect(textoDias(3)).toBe("3 días");
+  });
+});
+
+describe("estado de cuenta del sub", () => {
+  it("nombra el día en los dos idiomas", () => {
+    expect(fraccionBilingue(1)).toBe("Día completo / Full day");
+    expect(fraccionBilingue(0.5)).toBe("Medio día / Half day");
+  });
+
+  it("ordena de la fecha más vieja a la más nueva", () => {
+    const lista = [
+      { fecha: "2026-03-02", creado_en: "b" },
+      { fecha: "2026-03-01", creado_en: "z" },
+      { fecha: "2026-03-02", creado_en: "a" },
+    ];
+    expect(enOrden(lista)).toEqual([
+      { fecha: "2026-03-01", creado_en: "z" },
+      { fecha: "2026-03-02", creado_en: "a" },
+      { fecha: "2026-03-02", creado_en: "b" },
+    ]);
   });
 });
