@@ -71,7 +71,7 @@ export function DescargarRespaldo() {
     <form onSubmit={descargar} className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
       <h2 className="font-semibold">Descargar respaldo</h2>
       <p className="text-sm text-texto-suave">
-        Baja un archivo con todo: proyectos, clientes, pagos, subs, días, fotos, W-9 y acuerdos. Queda protegido con la
+        Baja un archivo con todo: proyectos, clientes, pagos, subs, días, gastos, fotos, W-9, acuerdos y recibos. Queda protegido con la
         contraseña que elijas. <strong className="text-tinta">Si la olvidás, no hay forma de abrirlo.</strong>
       </p>
       <label className={etiqueta}>

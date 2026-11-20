@@ -11,6 +11,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Pagos del cliente:** monto del contrato, plan (50/50, 40/30/30 o propio), cada pago recibido y una barra de progreso.
 - **Subcontratistas:** ficha con contacto y datos para la 1099. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
 - **Mano de obra:** subs por día (los días se marcan en un calendario, con medios días) o por contrato (adelantos y pago final). Muestra cuánto se le debe a cada uno.
+- **Gastos y ganancia:** en cada proyecto se anotan los gastos (materiales, herramientas o alquiler, permisos, dumpster…) con foto del recibo opcional. La ficha muestra la ganancia (contrato − mano de obra − gastos) y la plata en mano hoy (cobrado − pagado a subs − gastos).
 - **Reporte 1099:** a quién hay que hacerle la 1099-NEC en el año, qué datos le faltan y una planilla con contraseña para cualquier contador (resumen por sub y detalle de cada pago). Los datos de la empresa como pagador se cargan ahí una sola vez.
 - **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
 
@@ -86,7 +87,7 @@ npm run lint
 npm run build
 ```
 
-`npm test` comprueba solo las cuentas de plata: cuotas del cliente, lo que falta cobrar, días × tarifa (con medios días), contratos con adelantos, lo que se le debe a cada sub y los totales de la 1099. Las pruebas están en los archivos `*.test.ts`, al lado del código que prueban. Si se cambia una cuenta, hay que agregar o ajustar su prueba.
+`npm test` comprueba solo las cuentas de plata: cuotas del cliente, lo que falta cobrar, días × tarifa (con medios días), contratos con adelantos, lo que se le debe a cada sub, la ganancia de cada proyecto y los totales de la 1099. Las pruebas están en los archivos `*.test.ts`, al lado del código que prueban. Si se cambia una cuenta, hay que agregar o ajustar su prueba.
 
 Las pantallas se siguen probando a mano en la app, en tamaño de celular y con datos inventados.
 
@@ -132,10 +133,10 @@ Para pedirle a Claude un cambio en la base: *"agregá una migración para …"*.
 | Carpeta | Qué hay |
 |---|---|
 | `src/app/(app)/` | Las pantallas (todas piden sesión iniciada con verificación en dos pasos) |
-| `src/app/(app)/proyectos/[id]/` | Ficha del proyecto y sus secciones: `fotos/`, `pagos/` (cliente), `mano-de-obra/` (subs) |
+| `src/app/(app)/proyectos/[id]/` | Ficha del proyecto y sus secciones: `fotos/`, `pagos/` (cliente), `mano-de-obra/` (subs), `gastos/` (gastos y ganancia) |
 | `src/app/(app)/subs/` | Subcontratistas; `reporte-1099/` es el reporte y la planilla para el contador |
 | `src/app/(app)/respaldo/` | Descargar y comprobar respaldos (el armado está en `src/lib/respaldo.ts`) |
-| `src/lib/` | Textos, cálculos y tipos compartidos (por ejemplo `cobros.ts`, `mano-de-obra.ts`) |
+| `src/lib/` | Textos, cálculos y tipos compartidos (por ejemplo `cobros.ts`, `mano-de-obra.ts`, `gastos.ts`) |
 | `src/components/` | Piezas que se usan en varias pantallas (encabezado, formulario de pago…) |
 | `supabase/migrations/` | Estructura de la base de datos |
 
