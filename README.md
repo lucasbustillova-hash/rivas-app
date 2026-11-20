@@ -15,7 +15,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Calendario:** la semana con qué sub va a qué obra cada día. Se programan uno o varios subs por rango de fechas (sin domingos si se quiere) y avisa si alguien quedó en dos obras el mismo día. Lo ven todos; los administradores marcan desde ahí los días trabajados, que pasan a la cuenta del sub.
 - **Reporte 1099:** a quién hay que hacerle la 1099-NEC en el año, qué datos le faltan y una planilla con contraseña para cualquier contador (resumen por sub y detalle de cada pago). Los datos de la empresa como pagador se cargan ahí una sola vez.
 - **Buscador:** arriba de la lista de proyectos se busca por cliente, nombre de la obra, dirección, tipo de trabajo o teléfono. No importan los acentos ni las mayúsculas, y se combina con el filtro por estado.
-- **Cuentas pendientes:** todas las obras juntas: cuánto se le debe a cada sub (con el detalle por obra) y cuánto le falta pagar a cada cliente, con su próximo cobro. Los dos totales se ven arriba de la lista de proyectos (solo administradores).
+- **Cuentas pendientes:** todas las obras juntas: cuánto se le debe ya a cada sub (con el detalle por obra; los contratos de obras sin terminar van aparte) y cuánto le falta pagar a cada cliente, con su próximo cobro. Los dos totales se ven arriba de la lista de proyectos (solo administradores).
 - **Resumen del año:** lo cobrado, lo pagado a subs y los gastos del año, por proyecto, con una planilla para Excel para el contador. Se entra desde el final de la lista de proyectos (solo administradores).
 - **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
 

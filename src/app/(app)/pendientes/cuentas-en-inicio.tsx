@@ -20,7 +20,7 @@ export async function CuentasEnInicio() {
     >
       <span className="grid flex-1 grid-cols-2 gap-3 tabular-nums">
         <span className="flex flex-col">
-          <span className="text-xs text-texto-suave">Debemos a subs</span>
+          <span className="text-xs text-texto-suave">Debemos ya a subs</span>
           <strong className={debemos > 0 ? "text-orange-700" : "text-green-800"}>{dinero(debemos)}</strong>
         </span>
         <span className="flex flex-col">

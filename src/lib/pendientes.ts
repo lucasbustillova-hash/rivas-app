@@ -25,6 +25,15 @@ export type ContratoLeido = {
 
 export type DeudaObra = { asignacionId: string; proyectoId: string; proyecto: string; modalidad: Modalidad; debe: number };
 export type DeudaSub = { id: string; nombre: string; total: number; obras: DeudaObra[] };
+export type ContratoEnCurso = {
+  asignacionId: string;
+  proyectoId: string;
+  proyecto: string;
+  sub: string;
+  monto: number;
+  pagado: number;
+  falta: number;
+};
 export type CobroPendiente = {
   proyectoId: string;
   proyecto: string;
@@ -39,11 +48,17 @@ export type CobroPendiente = {
 const centavos = (n: number) => Math.round(n * 100) / 100;
 
 export function cuentasPendientes({ asignaciones, contratos }: { asignaciones: AsignacionLeida[]; contratos: ContratoLeido[] }) {
-  // Subs: lo que se le debe en cada obra (si se le pagó de más en una, queda en negativo y se descuenta).
+  // Subs: lo que se le debe ya en cada obra (si se le pagó de más en una, queda en negativo y se descuenta).
+  // Un contrato cuenta como deuda recién cuando la obra está terminada; mientras tanto va aparte, en "en curso".
   const porSub = new Map<string, DeudaSub>();
+  const enCurso: ContratoEnCurso[] = [];
   for (const a of asignaciones) {
-    const { debe } = resumenAsignacion(a, a.dias, a.pagos);
+    const { ganado, pagado, debe } = resumenAsignacion(a, a.dias, a.pagos);
     if (Math.abs(debe) < 0.005) continue;
+    if (a.modalidad === "contrato" && a.proyecto.estado !== "terminado") {
+      enCurso.push({ asignacionId: a.id, proyectoId: a.proyecto.id, proyecto: a.proyecto.nombre, sub: a.sub.nombre, monto: ganado, pagado, falta: debe });
+      continue;
+    }
     const s = porSub.get(a.sub.id) ?? { id: a.sub.id, nombre: a.sub.nombre, total: 0, obras: [] };
     s.obras.push({ asignacionId: a.id, proyectoId: a.proyecto.id, proyecto: a.proyecto.nombre, modalidad: a.modalidad, debe });
     s.total = centavos(s.total + debe);
@@ -72,10 +87,14 @@ export function cuentasPendientes({ asignaciones, contratos }: { asignaciones: A
     .filter((c) => c.falta > 0)
     .sort((a, b) => b.falta - a.falta);
 
+  enCurso.sort((a, b) => b.falta - a.falta || a.sub.localeCompare(b.sub));
+
   return {
     subs,
+    enCurso,
     clientes,
     debemos: centavos(subs.reduce((t, s) => t + Math.max(0, s.total), 0)),
+    enCursoTotal: centavos(enCurso.reduce((t, c) => t + Math.max(0, c.falta), 0)),
     nosDeben: centavos(clientes.reduce((t, c) => t + c.falta, 0)),
   };
 }
