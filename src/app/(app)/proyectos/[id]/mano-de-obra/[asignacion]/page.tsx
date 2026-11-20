@@ -109,6 +109,12 @@ export default async function AsignacionPage({
             clase={resumen.debe > 0 ? "text-orange-700" : "text-green-800"}
           />
         </section>
+        <Link
+          href={`/proyectos/${id}/mano-de-obra/${asignacion.id}/cuenta`}
+          className="-mt-1 self-end text-sm font-semibold text-obra"
+        >
+          Estado de cuenta para el sub ›
+        </Link>
 
         {porDia ? (
           <>
