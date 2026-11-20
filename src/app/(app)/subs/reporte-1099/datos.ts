@@ -42,7 +42,7 @@ export type Empresa = {
   telefono: string | null;
 };
 
-type PagoLeido = {
+export type PagoLeido = {
   fecha: string;
   monto: number;
   metodo: string;
@@ -62,23 +62,9 @@ export function faltanEmpresa(e: Empresa | null) {
   ].filter(Boolean) as string[];
 }
 
-// Pagos a subs del año, sumados por sub, con los datos que pide la 1099-NEC.
-export async function cargarReporte1099(supabase: SupabaseClient, anio: number) {
-  const pagos: PagoLeido[] = [];
-  for (let desde = 0; ; desde += 1000) {
-    const { data, error } = await supabase
-      .from("pagos_sub")
-      .select("fecha, monto, metodo, es_adelanto, nota, asignaciones(subcontratista_id, modalidad, proyectos(nombre))")
-      .gte("fecha", `${anio}-01-01`)
-      .lte("fecha", `${anio}-12-31`)
-      .order("fecha")
-      .order("id")
-      .range(desde, desde + 999);
-    if (error) throw new Error("No se pudieron leer los pagos.");
-    pagos.push(...((data ?? []) as unknown as PagoLeido[]));
-    if (!data || data.length < 1000) break;
-  }
-
+// Suma lo pagado a cada sub en el año. Lo pagado con tarjeta va aparte:
+// eso lo informa la plataforma de pago (1099-K), no va en la 1099-NEC.
+export function sumarPagos1099(pagos: PagoLeido[]) {
   const sumas = new Map<string, { total: number; conTarjeta: number }>();
   const detalle: PagoDetalle[] = [];
   for (const p of pagos) {
@@ -99,6 +85,27 @@ export async function cargarReporte1099(supabase: SupabaseClient, anio: number) 
       nota: p.nota,
     });
   }
+  return { sumas, detalle };
+}
+
+// Pagos a subs del año, sumados por sub, con los datos que pide la 1099-NEC.
+export async function cargarReporte1099(supabase: SupabaseClient, anio: number) {
+  const pagos: PagoLeido[] = [];
+  for (let desde = 0; ; desde += 1000) {
+    const { data, error } = await supabase
+      .from("pagos_sub")
+      .select("fecha, monto, metodo, es_adelanto, nota, asignaciones(subcontratista_id, modalidad, proyectos(nombre))")
+      .gte("fecha", `${anio}-01-01`)
+      .lte("fecha", `${anio}-12-31`)
+      .order("fecha")
+      .order("id")
+      .range(desde, desde + 999);
+    if (error) throw new Error("No se pudieron leer los pagos.");
+    pagos.push(...((data ?? []) as unknown as PagoLeido[]));
+    if (!data || data.length < 1000) break;
+  }
+
+  const { sumas, detalle } = sumarPagos1099(pagos);
 
   const ids = [...sumas.keys()];
   const [{ data: subs }, { data: privados }, { data: empresa }] = await Promise.all([

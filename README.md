@@ -79,13 +79,16 @@ Hace falta [Node.js](https://nodejs.org) 20 o más nuevo.
    ```
 4. Abrir http://localhost:3000.
 
-Antes de subir cambios, comprobar que compila:
+Antes de subir cambios, comprobar que las pruebas pasan y que compila:
 ```bash
+npm test
 npm run lint
 npm run build
 ```
 
-Todavía no hay tests automáticos: cada cambio se prueba a mano en la app, en tamaño de celular y con datos inventados.
+`npm test` comprueba solo las cuentas de plata: cuotas del cliente, lo que falta cobrar, días × tarifa (con medios días), contratos con adelantos, lo que se le debe a cada sub y los totales de la 1099. Las pruebas están en los archivos `*.test.ts`, al lado del código que prueban. Si se cambia una cuenta, hay que agregar o ajustar su prueba.
+
+Las pantallas se siguen probando a mano en la app, en tamaño de celular y con datos inventados.
 
 ### Si la computadora tiene poca memoria
 

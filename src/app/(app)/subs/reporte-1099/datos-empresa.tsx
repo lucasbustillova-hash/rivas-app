@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { campo, etiqueta } from "@/lib/estilos";
 import { einConGuion, lineasDireccion } from "@/lib/subs";
 import { guardarEmpresa, type EstadoEmpresa } from "./acciones";
@@ -14,9 +14,12 @@ export function DatosEmpresa({ empresa }: { empresa: Empresa | null }) {
   const [abierto, setAbierto] = useState(faltan.length > 0);
   const [estado, accion, guardando] = useActionState<EstadoEmpresa, FormData>(guardarEmpresa, { error: null });
 
-  useEffect(() => {
+  // Al guardar bien, se cierra el formulario (también si se guarda más de una vez).
+  const [ultimo, setUltimo] = useState(estado);
+  if (estado !== ultimo) {
+    setUltimo(estado);
     if (estado.listo) setAbierto(false);
-  }, [estado.listo]);
+  }
 
   return (
     <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
