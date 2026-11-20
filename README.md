@@ -12,6 +12,7 @@ Tecnología: Next.js + Supabase + Netlify (detalles en [`CLAUDE.md`](CLAUDE.md))
 - **Subcontratistas:** ficha con contacto y datos para la 1099. El SSN/EIN se guarda encriptado y el W-9 queda en una carpeta privada.
 - **Mano de obra:** subs por día (los días se marcan en un calendario, con medios días) o por contrato (adelantos y pago final). Muestra cuánto se le debe a cada uno.
 - **Gastos y ganancia:** en cada proyecto se anotan los gastos (materiales, herramientas o alquiler, permisos, dumpster…) con foto del recibo opcional. La ficha muestra la ganancia (contrato − mano de obra − gastos) y la plata en mano hoy (cobrado − pagado a subs − gastos).
+- **Calendario:** la semana con qué sub va a qué obra cada día. Se programan uno o varios subs por rango de fechas (sin domingos si se quiere) y avisa si alguien quedó en dos obras el mismo día. Lo ven todos; los administradores marcan desde ahí los días trabajados, que pasan a la cuenta del sub.
 - **Reporte 1099:** a quién hay que hacerle la 1099-NEC en el año, qué datos le faltan y una planilla con contraseña para cualquier contador (resumen por sub y detalle de cada pago). Los datos de la empresa como pagador se cargan ahí una sola vez.
 - **Respaldo:** baja un archivo encriptado con todos los datos y archivos de la app, y comprueba que un respaldo se pueda abrir. Avisa si pasaron más de 7 días sin hacer uno.
 
@@ -134,6 +135,7 @@ Para pedirle a Claude un cambio en la base: *"agregá una migración para …"*.
 |---|---|
 | `src/app/(app)/` | Las pantallas (todas piden sesión iniciada con verificación en dos pasos) |
 | `src/app/(app)/proyectos/[id]/` | Ficha del proyecto y sus secciones: `fotos/`, `pagos/` (cliente), `mano-de-obra/` (subs), `gastos/` (gastos y ganancia) |
+| `src/app/(app)/calendario/` | Calendario semanal (las fechas se calculan en `src/lib/agenda.ts`) |
 | `src/app/(app)/subs/` | Subcontratistas; `reporte-1099/` es el reporte y la planilla para el contador |
 | `src/app/(app)/respaldo/` | Descargar y comprobar respaldos (el armado está en `src/lib/respaldo.ts`) |
 | `src/lib/` | Textos, cálculos y tipos compartidos (por ejemplo `cobros.ts`, `mano-de-obra.ts`, `gastos.ts`) |

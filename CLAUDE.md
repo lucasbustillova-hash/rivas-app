@@ -25,7 +25,6 @@ Este archivo lo lee Claude al empezar cada sesión. Lo comparten Lucas y Mario: 
 
 - Reporte anual y exportación para las 1099.
 - Quotes e invoices (hoy se hacen en **Zoho Invoice**; más adelante, evaluar conectarse a su API en vez de rehacerlos).
-- Calendario de quién va a qué obra.
 - Acceso de solo lectura para un contador.
 - Conexión con QuickBooks (antes, exportar a Excel para el contador).
 
@@ -122,4 +121,5 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-17 — Sin modo offline y sin notificaciones.
 - 2026-11-17 — Contador (solo lectura) y QuickBooks quedan para después; primero exportar a Excel.
 - 2026-11-19 — Se adelantaron los gastos de materiales y la ganancia real por proyecto (estaban para después). Ganancia = contrato − mano de obra − gastos; "plata en mano" = cobrado − pagado a subs − gastos.
+- 2026-11-19 — Se adelantó el calendario de quién va a qué obra. Programar un día no suma plata: cuenta para el pago recién cuando un administrador lo marca como trabajado. El calendario lo ven todos (no tiene montos).
 - 2026-11-18 — En los PR se escribe `Closes #número` (en inglés): con "Cierra" GitHub no cierra el issue.
