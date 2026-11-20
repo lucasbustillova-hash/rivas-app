@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ESTADOS, datosEstado, rangoFechas } from "@/lib/proyectos";
 import { esAdmin } from "@/lib/permisos";
+import { CuentasEnInicio } from "./pendientes/cuentas-en-inicio";
 
 // Lista de proyectos con filtro por estado (pantalla 1 de los bocetos).
 export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
@@ -53,6 +55,12 @@ export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
       </div>
 
       <div className="flex flex-col gap-3 px-4 py-4">
+        {/* Los totales se cargan aparte, para no demorar la lista. */}
+        {admin && (
+          <Suspense fallback={<div className="h-[66px] rounded-2xl bg-white/60 shadow-sm" />}>
+            <CuentasEnInicio />
+          </Suspense>
+        )}
         {error && (
           <p className="rounded-2xl bg-red-50 p-4 text-sm text-red-800">
             No se pudieron cargar los proyectos. Revisá la conexión y probá de nuevo.
