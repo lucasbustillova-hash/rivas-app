@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
-import { AvisoMembrete, DatoPapel, LineaPapel, Membrete, cargarMembrete } from "@/components/membrete";
+import { AvisoMembrete, DatoPapel, LineaPapel, Membrete, TituloPapel, cargarMembrete } from "@/components/membrete";
 import { BotonImprimir } from "@/components/boton-imprimir";
 import { dinero, metodoBilingue } from "@/lib/cobros";
 import { fechaUS } from "@/lib/planilla";
@@ -76,7 +76,7 @@ export default async function EstadoDeCuentaPage({ params }: PageProps<"/proyect
 
             {porDia ? (
               <section>
-                <Titulo es={`Días trabajados (${textoDias(resumen.dias)})`} en="Days worked" />
+                <TituloPapel es={`Días trabajados (${textoDias(resumen.dias)})`} en="Days worked" />
                 {dias.length === 0 && <p className="py-2 text-texto-suave">Todavía no hay días cargados.</p>}
                 <table className="w-full tabular-nums">
                   <tbody>
@@ -104,7 +104,7 @@ export default async function EstadoDeCuentaPage({ params }: PageProps<"/proyect
             )}
 
             <section>
-              <Titulo es="Pagos" en="Payments" />
+              <TituloPapel es="Pagos" en="Payments" />
               {pagos.length === 0 && <p className="py-2 text-texto-suave">Todavía no se le pagó nada en esta obra.</p>}
               <table className="w-full tabular-nums">
                 <tbody>
@@ -158,13 +158,5 @@ export default async function EstadoDeCuentaPage({ params }: PageProps<"/proyect
         </p>
       </div>
     </main>
-  );
-}
-
-function Titulo({ es, en }: { es: string; en: string }) {
-  return (
-    <h2 className="border-b border-stone-200 pb-1 font-semibold">
-      {es} <span className="text-xs font-normal text-texto-suave">/ {en}</span>
-    </h2>
   );
 }
