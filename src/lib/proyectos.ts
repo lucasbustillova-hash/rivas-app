@@ -68,3 +68,24 @@ export function rangoFechas(inicio: string | null, fin: string | null) {
   if (b) return `Hasta ${b}`;
   return "Sin fechas";
 }
+
+// Minúsculas y sin acentos, para buscar: "José" → "jose".
+export function normalizar(texto: string) {
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+}
+
+// ¿El proyecto coincide con la búsqueda? Cada palabra buscada tiene que aparecer en alguno de los campos
+// (no importan los acentos ni las mayúsculas). En el teléfono se buscan solo los números.
+export function coincideBusqueda(busqueda: string, campos: (string | null | undefined)[]) {
+  const palabras = normalizar(busqueda).split(/\s+/).filter(Boolean);
+  if (palabras.length === 0) return true;
+  const textos = campos.filter((c): c is string => Boolean(c));
+  const texto = normalizar(textos.join(" "));
+  const numeros = textos.map((c) => c.replace(/\D/g, "")).join(" ");
+  return palabras.every((p) => {
+    if (texto.includes(p)) return true;
+    // "555-1234" o "(407)" se buscan como números, si tienen al menos 3.
+    const digitos = p.replace(/\D/g, "");
+    return digitos.length >= 3 && numeros.includes(digitos);
+  });
+}
