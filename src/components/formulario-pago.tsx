@@ -1,10 +1,12 @@
 "use client";
 
 import { startTransition, useActionState, useState } from "react";
+import Link from "next/link";
 import { METODOS } from "@/lib/cobros";
 import { campo, etiqueta } from "@/lib/estilos";
 
-export type EstadoPago = { error: string | null; listo?: number };
+// enlace: adónde ir después de guardar (por ejemplo, el recibo del pago).
+export type EstadoPago = { error: string | null; listo?: number; enlace?: { href: string; texto: string } };
 
 function hoyLocal() {
   const d = new Date();
@@ -41,7 +43,16 @@ export function FormularioPago({
   if (!abierto) {
     return (
       <div className="flex flex-col gap-2">
-        {estado.listo && !guardando && <p className="text-sm font-semibold text-green-800">{listoTexto}</p>}
+        {estado.listo && !guardando && (
+          <p className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-green-50 px-3.5 py-2.5 text-sm font-semibold text-green-800">
+            {listoTexto}
+            {estado.enlace && (
+              <Link href={estado.enlace.href} className="text-obra">
+                {estado.enlace.texto} ›
+              </Link>
+            )}
+          </p>
+        )}
         <button
           type="button"
           onClick={() => setAbierto(true)}
