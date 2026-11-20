@@ -40,7 +40,7 @@ export default async function PendientesPage() {
               <Link href={`/subs/${s.id}`} className="flex justify-between gap-3">
                 <span className="min-w-0 truncate font-medium">{s.nombre}</span>
                 <strong className={`shrink-0 ${s.total < 0 ? "text-texto-suave" : ""}`}>
-                  {s.total < 0 ? `A favor ${dinero(-s.total)}` : dinero(s.total)}
+                  {s.total < 0 ? `Se le pagó de más ${dinero(-s.total)}` : dinero(s.total)}
                 </strong>
               </Link>
               {s.obras.map((o) => (

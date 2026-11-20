@@ -3,9 +3,10 @@
 export type Celda = string | number | null;
 
 // Una celda de CSV: entre comillas, y sin que Excel la tome como fórmula.
+// Un número negativo ("-500.00") se deja tal cual: no es fórmula y Excel lo tiene que poder sumar.
 export function celda(valor: Celda) {
   let t = valor == null ? "" : String(valor);
-  if (/^[=+\-@\t\r]/.test(t)) t = `'${t}`;
+  if (/^[=+\-@\t\r]/.test(t) && !/^-\d+(\.\d+)?$/.test(t)) t = `'${t}`;
   return `"${t.replace(/"/g, '""')}"`;
 }
 
