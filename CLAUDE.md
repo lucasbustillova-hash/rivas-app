@@ -41,6 +41,7 @@ La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
 - Login obligatorio, idealmente con verificación en dos pasos.
 - SSN y EIN **encriptados** en la base de datos y **ocultos** en pantalla (•••-••-1234) hasta tocar "Mostrar".
 - Solo administradores ven la información de impuestos y la financiera.
+- Solo administradores pueden borrar obras y subs (borrar una obra borra también sus pagos, contratos, días y gastos).
 - Respaldos automáticos de la base de datos y de las fotos.
 
 ## Tecnología
@@ -123,4 +124,5 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-19 — Se adelantó el calendario de quién va a qué obra. Programar un día no suma plata: cuenta para el pago recién cuando un administrador lo marca como trabajado. El calendario lo ven todos (no tiene montos).
 - 2026-11-19 — Resumen del año para el contador (cobrado, pagado a subs y gastos por proyecto, con planilla para Excel). Se cuenta por la fecha de cada pago, como el banco. La planilla no lleva contraseña porque no trae SSN/EIN.
 - 2026-11-20 — Cuentas pendientes: el saldo de un contrato con un sub cuenta como deuda recién cuando la obra está Terminada. Mientras tanto se muestra aparte, en "Contratos en curso", y no suma a lo que se debe ya.
+- 2026-11-20 — Revisión de permisos: un usuario común podía borrar obras y subs desde la base; ahora solo los administradores. Se comprobó simulando un usuario común, un administrador sin verificación en dos pasos y uno verificado.
 - 2026-11-18 — En los PR se escribe `Closes #número` (en inglés): con "Cierra" GitHub no cierra el issue.
