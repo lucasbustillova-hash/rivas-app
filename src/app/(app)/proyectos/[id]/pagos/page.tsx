@@ -38,6 +38,9 @@ export default async function PagosPage({ params }: PageProps<"/proyectos/[id]/p
       <div className="flex flex-col gap-3 px-4 py-4">
         <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
           <BarraCobro resumen={resumen} />
+          <Link href={`/proyectos/${id}/pagos/cuenta`} className="self-end text-sm font-semibold text-obra">
+            Estado de cuenta para el cliente ›
+          </Link>
         </section>
 
         <FormularioPago guardar={registrarPago.bind(null, id)} sugerido={sugerido} />

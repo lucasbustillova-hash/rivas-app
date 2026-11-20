@@ -69,3 +69,12 @@ export function LineaPapel({ es, en, valor, fuerte = false }: { es: string; en: 
     </>
   );
 }
+
+// Título de una sección del papel, en español e inglés.
+export function TituloPapel({ es, en }: { es: string; en: string }) {
+  return (
+    <h2 className="border-b border-stone-200 pb-1 font-semibold">
+      {es} <span className="text-xs font-normal text-texto-suave">/ {en}</span>
+    </h2>
+  );
+}
