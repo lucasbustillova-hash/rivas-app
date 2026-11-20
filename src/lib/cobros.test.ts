@@ -127,6 +127,7 @@ describe("recibo del cliente", () => {
     expect(metodoBilingue("efectivo")).toBe("Efectivo / Cash");
     expect(metodoBilingue("zelle")).toBe("Zelle");
     expect(metodoBilingue("tarjeta")).toBe("Tarjeta / Card");
+    expect(metodoBilingue("transferencia")).toBe("Transferencia / Bank transfer");
     expect(numeroRecibo("1a2b3c4d-0000-4000-8000-000000000000")).toBe("R-1A2B3C4D");
   });
 });

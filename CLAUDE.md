@@ -114,6 +114,7 @@ _Anotar acá cada decisión importante con la fecha, para no volver a discutirla
 - 2026-11-17 — Quotes e invoices quedan fuera de la versión 1: se siguen haciendo en Zoho Invoice.
 - 2026-11-17 — No se cobra sales tax.
 - 2026-11-17 — Formas de pago del cliente: efectivo, Zelle y cheque. Tarjeta solo si el cliente lo pide, con Melio.
+- 2026-11-20 — Se agregó "Transferencia" (bancaria) como forma de pago, como pedía el documento de alcances.
 - 2026-11-17 — El repositorio queda público: ningún dato real ni secreto entra al repo (ver "Seguridad y datos sensibles").
 - 2026-11-17 — Tecnología: Next.js + Supabase, como PWA (una sola app para celular y web).
 - 2026-11-17 — Hosting en Netlify (plan gratis, permite uso comercial). El proyecto de Supabase queda por ahora en Oregon (us-west-2).
