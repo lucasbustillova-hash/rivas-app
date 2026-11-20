@@ -5,13 +5,17 @@ import { esAdmin } from "@/lib/permisos";
 import { Encabezado } from "@/components/encabezado";
 import { MINIMO_1099, anioActual, dinero, lineasDireccion, tinOculto, type Sub, type SubPrivado } from "@/lib/subs";
 import { textoDias } from "@/lib/mano-de-obra";
+import { cuentasPendientes } from "@/lib/pendientes";
+import type { EstadoProyecto } from "@/lib/proyectos";
 import { MostrarTin } from "../mostrar-tin";
 import { SubirW9 } from "../subir-w9";
 
 type Asignacion = {
   id: string;
-  proyectos: { id: string; nombre: string; clientes: { nombre: string } | null } | null;
-  dias_trabajados: { fecha: string; fraccion: number }[];
+  modalidad: "dia" | "contrato";
+  monto_contrato: number | null;
+  proyectos: { id: string; nombre: string; estado: EstadoProyecto; clientes: { nombre: string } | null } | null;
+  dias_trabajados: { fecha: string; fraccion: number; tarifa: number }[];
   pagos_sub: { fecha: string; monto: number }[];
 };
 
@@ -33,7 +37,9 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
       supabase.from("subcontratistas_privado").select("*").eq("subcontratista_id", id).maybeSingle<SubPrivado>(),
       supabase
         .from("asignaciones")
-        .select("id, proyectos(id, nombre, clientes(nombre)), dias_trabajados(fecha, fraccion), pagos_sub(fecha, monto)")
+        .select(
+          "id, modalidad, monto_contrato, proyectos(id, nombre, estado, clientes(nombre)), dias_trabajados(fecha, fraccion, tarifa), pagos_sub(fecha, monto)",
+        )
         .eq("subcontratista_id", id),
     ]);
     privado = p.data;
@@ -44,6 +50,23 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
       urlW9 = data?.signedUrl ?? null;
     }
   }
+
+  // Lo que se le debe ya (todas las obras) y lo que falta de contratos en curso: la misma cuenta que Cuentas pendientes.
+  const cuentas = cuentasPendientes({
+    asignaciones: asignaciones
+      .filter((a) => a.proyectos)
+      .map((a) => ({
+        id: a.id,
+        modalidad: a.modalidad,
+        monto_contrato: a.monto_contrato == null ? null : Number(a.monto_contrato),
+        sub: { id: sub.id, nombre: sub.nombre },
+        proyecto: { id: a.proyectos!.id, nombre: a.proyectos!.nombre, estado: a.proyectos!.estado },
+        dias: a.dias_trabajados,
+        pagos: a.pagos_sub,
+      })),
+    contratos: [],
+  });
+  const deuda = cuentas.subs[0] ?? null;
 
   // Historial del año: días y pagado por proyecto.
   const delAnio = (fecha: string) => fecha.startsWith(`${anio}-`);
@@ -106,6 +129,54 @@ export default async function SubPage({ params }: PageProps<"/subs/[id]">) {
               )}
               <SubirW9 subId={sub.id} tiene={Boolean(privado?.w9_firmado)} />
             </div>
+          </section>
+        )}
+
+        {admin && (
+          <section className="flex flex-col rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="font-semibold">{deuda && deuda.total < 0 ? "Se le pagó de más" : "Se le debe ya"}</h2>
+              <strong className={`text-lg tabular-nums ${deuda && deuda.total > 0 ? "text-orange-700" : "text-green-800"}`}>
+                {dinero(Math.abs(deuda?.total ?? 0))}
+              </strong>
+            </div>
+            {!deuda && <p className="text-sm text-texto-suave">Está al día en todas las obras.</p>}
+            {deuda?.obras.map((o) => (
+              <Link
+                key={o.asignacionId}
+                href={`/proyectos/${o.proyectoId}/mano-de-obra/${o.asignacionId}`}
+                className="mt-1.5 flex justify-between gap-3 rounded-lg bg-stone-50 px-2.5 py-2 text-sm tabular-nums active:bg-stone-100"
+              >
+                <span className="min-w-0 truncate">
+                  {o.proyecto} · {o.modalidad === "dia" ? "por día" : "contrato"}
+                </span>
+                <span className="shrink-0">
+                  {o.debe < 0 ? `pagado de más ${dinero(-o.debe)}` : dinero(o.debe)}
+                  <span aria-hidden="true" className="pl-1.5 text-obra">
+                    ›
+                  </span>
+                </span>
+              </Link>
+            ))}
+            {cuentas.enCurso.length > 0 && (
+              <>
+                <p className="pt-3 text-xs text-texto-suave">Contratos en curso (se pagan al terminar, no suman arriba):</p>
+                {cuentas.enCurso.map((c) => (
+                  <Link
+                    key={c.asignacionId}
+                    href={`/proyectos/${c.proyectoId}/mano-de-obra/${c.asignacionId}`}
+                    className="mt-1.5 flex justify-between gap-3 rounded-lg border border-stone-200 px-2.5 py-2 text-sm text-texto-suave tabular-nums active:bg-stone-50"
+                  >
+                    <span className="min-w-0 truncate">
+                      {c.proyecto} · pagó {dinero(c.pagado)} de {dinero(c.monto)}
+                    </span>
+                    <span className="shrink-0">
+                      {c.falta < 0 ? `pagado de más ${dinero(-c.falta)}` : `faltan ${dinero(c.falta)}`}
+                    </span>
+                  </Link>
+                ))}
+              </>
+            )}
           </section>
         )}
 
