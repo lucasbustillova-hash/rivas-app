@@ -82,7 +82,12 @@ export default async function PagosPage({ params }: PageProps<"/proyectos/[id]/p
               </span>
               <span className="flex shrink-0 flex-col items-end gap-0.5">
                 <strong>{dinero(Number(p.monto))}</strong>
-                <BorrarPago borrar={borrarPago.bind(null, p.id)} texto={`el pago de ${dinero(Number(p.monto))}`} />
+                <span className="flex items-center gap-3">
+                  <Link href={`/proyectos/${id}/pagos/recibo/${p.id}`} className="text-xs font-semibold text-obra">
+                    Recibo
+                  </Link>
+                  <BorrarPago borrar={borrarPago.bind(null, p.id)} texto={`el pago de ${dinero(Number(p.monto))}`} />
+                </span>
               </span>
             </div>
           ))}

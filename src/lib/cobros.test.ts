@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cuotasDelPlan, dinero, estadoCuotas, leerMonto, resumenCobro, type Cuota } from "@/lib/cobros";
+import { cuotasDelPlan, dinero, estadoCuotas, leerMonto, metodoBilingue, numeroRecibo, resumenCobro, saldoAlPago, type Cuota } from "@/lib/cobros";
 
 const suma = (montos: { monto: number }[]) => Math.round(montos.reduce((t, c) => t + c.monto, 0) * 100) / 100;
 
@@ -97,5 +97,36 @@ describe("leer y mostrar montos", () => {
   it("muestra dólares con centavos solo si hacen falta", () => {
     expect(dinero(1500)).toBe("$1,500");
     expect(dinero(1500.5)).toBe("$1,500.50");
+  });
+});
+
+describe("recibo del cliente", () => {
+  const pagos = [
+    { id: "c", fecha: "2026-03-01", creado_en: "2026-03-01T10:00:00Z", monto: 2000 },
+    { id: "a", fecha: "2026-01-10", creado_en: "2026-01-10T09:00:00Z", monto: 5000 },
+    { id: "b2", fecha: "2026-02-01", creado_en: "2026-02-01T15:00:00Z", monto: 500 },
+    { id: "b1", fecha: "2026-02-01", creado_en: "2026-02-01T11:00:00Z", monto: 1000 },
+  ];
+
+  it("cuenta lo pagado hasta ese pago, en orden de fecha", () => {
+    expect(saldoAlPago(10000, pagos, "a")).toEqual({ pagado: 5000, saldo: 5000 });
+    expect(saldoAlPago(10000, pagos, "b1")).toEqual({ pagado: 6000, saldo: 4000 });
+    expect(saldoAlPago(10000, pagos, "b2")).toEqual({ pagado: 6500, saldo: 3500 });
+    expect(saldoAlPago(10000, pagos, "c")).toEqual({ pagado: 8500, saldo: 1500 });
+  });
+
+  it("si pagó de más, el saldo queda en cero", () => {
+    expect(saldoAlPago(8000, pagos, "c")).toEqual({ pagado: 8500, saldo: 0 });
+  });
+
+  it("un pago que no está da null", () => {
+    expect(saldoAlPago(10000, pagos, "x")).toBeNull();
+  });
+
+  it("muestra la forma de pago en los dos idiomas y el número del recibo", () => {
+    expect(metodoBilingue("efectivo")).toBe("Efectivo / Cash");
+    expect(metodoBilingue("zelle")).toBe("Zelle");
+    expect(metodoBilingue("tarjeta")).toBe("Tarjeta / Card");
+    expect(numeroRecibo("1a2b3c4d-0000-4000-8000-000000000000")).toBe("R-1A2B3C4D");
   });
 });

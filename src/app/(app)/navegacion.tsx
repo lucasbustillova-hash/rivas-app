@@ -18,7 +18,7 @@ export function Navegacion() {
   return (
     <nav
       aria-label="Secciones"
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-borde bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className="fixed inset-x-0 bottom-0 z-10 print:hidden border-t border-borde bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
     >
       <div className="mx-auto grid max-w-3xl grid-cols-3">
         <Link href="/" className={item(enProyectos)} aria-current={enProyectos ? "page" : undefined}>
