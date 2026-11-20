@@ -49,7 +49,7 @@ La app guarda SSN, EIN y datos de pago. Estas reglas valen desde el primer día:
 Lucas arma y prueba la app, pero la app y sus datos son de NAHOMY. Cuando Mario y José decidan que la app tiene lo que necesitan, se hace la entrega y solo ellos dos quedan con acceso:
 
 1. Borrar los datos de prueba (la obra y el sub "PRUEBA").
-2. Borrar los usuarios de la app que no son de NAHOMY: el de prueba (`prueba@nahomy.pro`) y el de Lucas.
+2. Borrar el usuario de Lucas en la app (`prueba@nahomy.pro`, el que usa para probar). El otro usuario (`info@nahomyconst.com`) es de Mario y queda.
 3. Supabase: Mario saca a Lucas de la organización.
 4. Netlify: Mario saca a Lucas del equipo, si está.
 5. GitHub: sacar a Lucas de la organización `nahomy-pro` (Mario queda como dueño).
