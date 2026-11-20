@@ -7,22 +7,10 @@ import { campo, etiqueta } from "@/lib/estilos";
 import { MINIMO_CONTRASENA } from "@/lib/respaldo";
 import { einConGuion, lineasDireccion, tinCompleto } from "@/lib/subs";
 import { dinero, nombreMetodo } from "@/lib/cobros";
+import { csv, descargar, fechaUS, type Celda } from "@/lib/planilla";
 import { faltanEmpresa, type Empresa, type Fila1099, type PagoDetalle } from "./datos";
 
 configure({ useWebWorkers: false });
-
-// Una celda de CSV: entre comillas, y sin que Excel la tome como fórmula.
-function celda(valor: string | number | null) {
-  let t = valor == null ? "" : String(valor);
-  if (/^[=+\-@\t\r]/.test(t)) t = `'${t}`;
-  return `"${t.replace(/"/g, '""')}"`;
-}
-
-// El BOM al principio hace que Excel lea bien los acentos.
-const csv = (filas: (string | number | null)[][]) => "﻿" + filas.map((f) => f.map(celda).join(",")).join("\r\n") + "\r\n";
-
-// fecha "2026-03-15" → "03/15/2026", como la usan el banco y los contadores en EE. UU.
-const fechaUS = (f: string) => `${f.slice(5, 7)}/${f.slice(8, 10)}/${f.slice(0, 4)}`;
 
 type Props = {
   anio: number;
@@ -60,7 +48,7 @@ export function ExportarContador({ anio, minimo, empresa, necesitan, todos, deta
       const supabase = createClient();
 
       // 1) Resumen: una fila por sub que necesita 1099-NEC.
-      const resumen: (string | number | null)[][] = [
+      const resumen: Celda[][] = [
         [
           "Nombre legal (Recipient name)",
           "Nombre en la app",
@@ -107,7 +95,7 @@ export function ExportarContador({ anio, minimo, empresa, necesitan, todos, deta
 
       // 2) Detalle: cada pago del año a cualquier sub, para el registro propio y para cruzar con el banco.
       const subDe = new Map(todos.map((f) => [f.id, f]));
-      const pagos: (string | number | null)[][] = [
+      const pagos: Celda[][] = [
         [
           "Fecha (Date)",
           "Nombre legal (Recipient name)",
@@ -168,14 +156,7 @@ export function ExportarContador({ anio, minimo, empresa, necesitan, todos, deta
       await zip.add(`2-pagos-${anio}.csv`, new TextReader(csv(pagos)));
       const archivo = await zip.close();
 
-      const url = URL.createObjectURL(archivo);
-      const enlace = document.createElement("a");
-      enlace.href = url;
-      enlace.download = `1099-NEC-${anio}-NAHOMY.zip`;
-      document.body.appendChild(enlace);
-      enlace.click();
-      enlace.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      descargar(archivo, `1099-NEC-${anio}-NAHOMY.zip`);
       setListo(true);
       setContrasena("");
       setRepetida("");

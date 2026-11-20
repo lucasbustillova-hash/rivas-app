@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ESTADOS, datosEstado, rangoFechas } from "@/lib/proyectos";
+import { esAdmin } from "@/lib/permisos";
 
 // Lista de proyectos con filtro por estado (pantalla 1 de los bocetos).
 export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
@@ -13,7 +14,7 @@ export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
     .select("id, nombre, tipo_trabajo, estado, fecha_inicio, fecha_fin_estimada, clientes(nombre)")
     .order("creado_en", { ascending: false });
   if (filtro) consulta = consulta.eq("estado", filtro);
-  const { data: proyectos, error } = await consulta;
+  const [{ data: proyectos, error }, admin] = await Promise.all([consulta, esAdmin()]);
 
   const filtros = [{ valor: null, nombre: "Todos" }, ...ESTADOS.map((e) => ({ valor: e.valor, nombre: e.plural }))];
 
@@ -89,6 +90,18 @@ export default async function ProyectosPage({ searchParams }: PageProps<"/">) {
             </Link>
           );
         })}
+
+        {admin && (
+          <Link
+            href="/resumen-anual"
+            className="mt-2 flex items-center justify-between rounded-xl border border-borde bg-white px-4 py-3 text-sm font-semibold active:bg-stone-50"
+          >
+            <span>Resumen del año para el contador</span>
+            <span aria-hidden="true" className="text-obra">
+              ›
+            </span>
+          </Link>
+        )}
       </div>
     </main>
   );
